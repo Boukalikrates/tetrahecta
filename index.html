@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Tetrahecta</title>
+    <meta charset=utf-8>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#111111">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <link rel="stylesheet" href="lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="1.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="lib/jquery-3.2.1.min.js"></script>
+    <script src="lib/jquery.mousewheel.min.js"></script>
+    <script src="lib/jquery.svg.min.js"></script>
+    <script src="lib/jquery.svganim.min.js"></script>
+    <script src="gamerules.js"></script>
+    <script src="Block.js"></script>
+    <script src="Gamerule.js"></script>
+    <script src="Game.js"></script>
+    <script src="Guy.js"></script>
+    <script src="SVG.js"></script>
+    <script src="controller.js"></script>
+    <script src="Overlay.js"></script>
+    <script src="kmain.js"></script>
+    <script src="management.js"></script>
+    <script src="little.js"></script>
+    <script src="ready.js"></script>
+    <!--    <script src="bots.js"></script>-->
+</head>
+
+<body>
+    <div id="top" class="scheme00">
+        <h1 class="logo"><span class="t">T</span><span class="e">e</span><span class="t">t</span><span class="r">r</span><span class="a">a</span><span class="r">h</span><span class="e">e</span><span class="r">c</span><span class="t">t</span><span class="a">a</span></h1>
+        <div id="opts">
+
+            <div class="ngcnt">
+                <button class="ngbtn">New game</button>
+                <button class="ngsts" title="Settings" aria-label="Settings"><i class="fa fa-cog" aria-hidden="true"></i></button>
+            </div>
+            <div id="meter-outer" style="display:none">
+                <div id="meter-inner">
+                    <div id="meter-text">0</div>
+                </div>
+            </div>
+
+            <table class="olderp">
+                <tr id="teamrow0" style="display:none">
+                    <th data-n="0" id="teamname0" class="ten te  ">&nbsp;</th>
+                    <td class="point" id="point0">0</td>
+                    <td class="rem" id="rem0">0</td>
+                </tr>
+                <tr id="teamrow1" style="display:none">
+                    <th data-n="1" id="teamname1" class="ten te t">&nbsp;</th>
+                    <td class="point" id="point1">0</td>
+                    <td class="rem" id="rem1">0</td>
+                </tr>
+                <tr id="teamrow2" style="display:none">
+                    <th data-n="2" id="teamname2" class="ten te e">&nbsp;</th>
+                    <td class="point" id="point2">0</td>
+                    <td class="rem" id="rem2">0</td>
+                </tr>
+                <tr id="teamrow3" style="display:none">
+                    <th data-n="3" id="teamname3" class="ten te r">&nbsp;</th>
+                    <td class="point" id="point3">0</td>
+                    <td class="rem" id="rem3">0</td>
+                </tr>
+                <tr id="teamrow4" style="display:none">
+                    <th data-n="4" id="teamname4" class="ten te a">&nbsp;</th>
+                    <td class="point" id="point4">0</td>
+                    <td class="rem" id="rem4">0</td>
+                </tr>
+
+
+            </table>
+
+            <button class="ngres" style="display: none">Results</button>
+
+        </div>
+
+
+
+
+        <div id="tablecontainer"><svg id="elemcontainer" width="800" height="400"></svg></div>
+
+
+
+
+        <div id="brandnewoverlays">
+
+            <div class="overlaytab settings">
+                <h2><i class="fa fa-arrow-left fa-pull-left backoverlay" aria-hidden="true"></i> Settings <i class="fa fa-times fa-pull-right closeoverlay" aria-hidden="true"></i></h2>
+
+                <div class="thircont">
+                    <div class="third">
+                        <label>Colors <i class="fa fa-circle t" aria-hidden="true"></i> <i class="fa fa-circle e" aria-hidden="true"></i> <i class="fa fa-circle r" aria-hidden="true"></i> <i class="fa fa-circle a" aria-hidden="true"></i><input type="range" min=1 max=24 value=1 id="cscheme"></label>
+                        <input type="checkbox" id="pixelscaling" onchange="zoom()">
+                        <label for="pixelscaling" title="Integer scale factors only" class="">Pixel-Scaling</label>
+                        <input type="checkbox" id="rotateboard">
+                        <!--                        <label for="rotateboard" title="while scrolling without a block" class="">Rotate board</label>-->
+                        <p>Tetrahecta release 2018-11-11 🇵🇱</p>
+                    </div>
+                    <div class="third">
+                        <label>Player <span class="te r">3</span> name<input data-n="3" class="tin te r" id="tmname3" form="ssform" pattern="[\u0410-\u042F\u0430-\u044FA-Za-z0-9_][\u0410-\u042F\u0430-\u044FA-Za-z0-9 _.()+#-]{2,19}"></label>
+                        <label>Player <span class="te e">2</span> name<input data-n="2" class="tin te e" id="tmname2" form="ssform" pattern="[\u0410-\u042F\u0430-\u044FA-Za-z0-9_][\u0410-\u042F\u0430-\u044FA-Za-z0-9 _.()+#-]{2,19}"></label>
+                        <p>Leave empty to exclude player.</p>
+                        <p>Enter <strong class="sq">_bot</strong> to summon one of the Forever Alone's Playmates.</p>
+                        <button id="learnbots">Bot info</button>
+                    </div>
+                    <div class="third">
+                        <form id="ssform">
+                            <label>Player <span class="te a">4</span> name<input data-n="4" class="tin te a" id="tmname4" pattern="[\u0410-\u042F\u0430-\u044FA-Za-z0-9_][\u0410-\u042F\u0430-\u044FA-Za-z0-9 _.()+#-]{2,19}"></label>
+                            <label>Player <span class="te t">1</span> name<input data-n="1" class="tin te t" id="tmname1" pattern="[\u0410-\u042F\u0430-\u044FA-Za-z0-9_][\u0410-\u042F\u0430-\u044FA-Za-z0-9 _.()+#-]{2,19}"></label>
+                            <label>Gamerule <select id="grchooser"></select></label>
+                            <input type="checkbox" id="timegame" checked>
+                            <!--                            <label for="timegame" title="Every player has 69 seconds to move" class="">Time is only illusion</label>-->
+                            <button type="submit" id="ssbtn">Save settings &amp; start game</button>
+                        </form>
+                    </div>
+                    <div class="dev third" style="display:none">
+                        <label>玩家<span class="te">0</span>名<input disabled data-n="0" class="tin te" id="tmname0" form="ssform" pattern="[\u0410-\u042F\u0430-\u044FA-Za-z0-9_][\u0410-\u042F\u0430-\u044FA-Za-z0-9 _.()+#-]{2,19}"></label>
+                        <label>一种机器人<input id="kobot" form="ssform" pattern="[\u0410-\u042F\u0430-\u044FA-Za-z0-9_][\u0410-\u042F\u0430-\u044FA-Za-z0-9 _.()+#-]{2,19}" value="_bot"></label>
+                        <button class="allbots">他们都是机器人</button>
+                        <button class="allbots">机器人，但是玩家<span class="te t">1</span></button>
+                        <button class="allbots">机器人，但是玩家<span class="te e">2</span></button>
+                        <button class="allbots">机器人，但是玩家<span class="te r">3</span></button>
+                        <button class="allbots">机器人，但是玩家<span class="te a">4</span></button>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="overlaytab botinfo" style="display:none">
+                <h2><i class="fa fa-arrow-left fa-pull-left backoverlay" aria-hidden="true"></i> Bot info <i class="fa fa-times fa-pull-right closeoverlay" aria-hidden="true"></i></h2>
+                <div class="thircont">
+                    <div class="third centered">
+                        <!--                        <img src="http://i.imgur.com/GBXzyBl.jpg" alt="Gregor" class="botpic">-->
+                        <h3>_Gregor</h3>
+                        <ul>
+                            <li>aggressive</li>
+                            <li>wanna fight</li>
+                            <li>will always block you</li>
+                            <li>nobody likes him</li>
+                        </ul>
+                    </div>
+                    <div class="third centered">
+                        <!--                        <img src="http://i.imgur.com/rEhGbaU.jpg" alt="Martin" class="botpic">-->
+                        <h3>_Martin</h3>
+                        <ul>
+                            <li>calm</li>
+                            <li>peaceful</li>
+                            <li>likes hugging</li>
+                            <li>knows da wae</li>
+                        </ul>
+                    </div>
+                    <div class="third centered">
+                        <!--                        <img src="http://i.imgur.com/YY8epTB.jpg" alt="Joseph" class="botpic">-->
+                        <h3>_Joseph</h3>
+                        <ul>
+                            <li>wise</li>
+                            <li>balanced</li>
+                            <li>likes everyone but&nbsp;hates haters</li>
+                            <li>a man of culture as well</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="overlaytab results">
+                <h2><i class="fa fa-arrow-left fa-pull-left backoverlay" aria-hidden="true"></i> Game over! <i class="fa fa-times fa-pull-right closeoverlay" aria-hidden="true"></i></h2>
+
+                <div id="scorecontainer">
+                    <p class="great">The Great Winner is</p>
+                    <p class="winner" id="winner">Ghost</p>
+                    <p class="great">scoring <output id="finalpts">0</output> points!</p>
+                    <div id="neuec"></div>
+                    <table id="gonetable"></table>
+                    <p class="ghost">send nudes</p>
+                </div>
+                <div class="ngcnt">
+                    <button class="ngbtn">New game</button>
+                    <button class="ngsts" title="Settings" aria-label="Settings"><i class="fa fa-cog" aria-hidden="true"></i></button>
+                </div>
+            </div>
+            <!-- end overlays -->
+        </div>
+
+
+    </div>
+</body>
+
+</html>
