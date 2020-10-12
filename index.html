@@ -5,7 +5,7 @@
     <title>Tetrahecta</title>
     <meta charset=utf-8>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="theme-color" content="#111111">
+    <meta name="theme-color" content="#000000">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
     <link rel="stylesheet" href="lib/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="1.css">
@@ -14,17 +14,16 @@
     <script src="lib/jquery.mousewheel.min.js"></script>
     <script src="lib/jquery.svg.min.js"></script>
     <script src="lib/jquery.svganim.min.js"></script>
-    <script src="gamerules.js"></script>
+    <script src="little.js"></script>
     <script src="Block.js"></script>
     <script src="Gamerule.js"></script>
     <script src="Game.js"></script>
     <script src="Guy.js"></script>
-    <script src="SVG.js"></script>
+    <script src="SVGLayout.js"></script>
     <script src="controller.js"></script>
     <script src="Overlay.js"></script>
     <script src="kmain.js"></script>
     <script src="management.js"></script>
-    <script src="little.js"></script>
     <script src="ready.js"></script>
     <!--    <script src="bots.js"></script>-->
 </head>
@@ -88,7 +87,7 @@
 
         <div id="brandnewoverlays">
 
-            <div class="overlaytab settings">
+            <div class="overlaytab settings" data-title="settings">
                 <h2><i class="fa fa-arrow-left fa-pull-left backoverlay" aria-hidden="true"></i> Settings <i class="fa fa-times fa-pull-right closeoverlay" aria-hidden="true"></i></h2>
 
                 <div class="thircont">
@@ -98,14 +97,14 @@
                         <label for="pixelscaling" title="Integer scale factors only" class="">Pixel-Scaling</label>
                         <input type="checkbox" id="rotateboard">
                         <!--                        <label for="rotateboard" title="while scrolling without a block" class="">Rotate board</label>-->
-                        <p>Tetrahecta release 2018-11-11 🇵🇱</p>
+                        <p>Tetrahecta debug 2018-11-21</p>
                     </div>
                     <div class="third">
                         <label>Player <span class="te r">3</span> name<input data-n="3" class="tin te r" id="tmname3" form="ssform" pattern="[\u0410-\u042F\u0430-\u044FA-Za-z0-9_][\u0410-\u042F\u0430-\u044FA-Za-z0-9 _.()+#-]{2,19}"></label>
                         <label>Player <span class="te e">2</span> name<input data-n="2" class="tin te e" id="tmname2" form="ssform" pattern="[\u0410-\u042F\u0430-\u044FA-Za-z0-9_][\u0410-\u042F\u0430-\u044FA-Za-z0-9 _.()+#-]{2,19}"></label>
                         <p>Leave empty to exclude player.</p>
-                        <p>Enter <strong class="sq">_bot</strong> to summon one of the Forever Alone's Playmates.</p>
-                        <button id="learnbots">Bot info</button>
+                        <p>Enter <strong class="sq">_bot</strong> to summon one of the Forever Alone's Playmates. <span class="te" id="learnbots">Learn more</span></p>
+                        
                     </div>
                     <div class="third">
                         <form id="ssform">
@@ -130,7 +129,7 @@
                 </div>
             </div>
 
-            <div class="overlaytab botinfo" style="display:none">
+            <div class="overlaytab botinfo" data-title="botinfo" style="display:none">
                 <h2><i class="fa fa-arrow-left fa-pull-left backoverlay" aria-hidden="true"></i> Bot info <i class="fa fa-times fa-pull-right closeoverlay" aria-hidden="true"></i></h2>
                 <div class="thircont">
                     <div class="third centered">
@@ -165,7 +164,7 @@
                     </div>
                 </div>
             </div>
-            <div class="overlaytab results">
+            <div class="overlaytab results" data-title="results">
                 <h2><i class="fa fa-arrow-left fa-pull-left backoverlay" aria-hidden="true"></i> Game over! <i class="fa fa-times fa-pull-right closeoverlay" aria-hidden="true"></i></h2>
 
                 <div id="scorecontainer">

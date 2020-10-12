@@ -65,7 +65,7 @@ function gameover() {
     $("meta").eq(2).attr("content", '#' + schememod(scheme)[0]);
     maketime(current.id);
     $(".ngres").show();
-    overlay.open("results");
+    current.layout.overlay.open("results");
     //if(whosbot[1]&&whosbot[2]&&whosbot[3]&&whosbot[4])setTimeout(function(){newgame()},5000);
 
 }

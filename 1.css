@@ -29,7 +29,6 @@ html {
 #top {
     width: 800px;
     height: 400px;
-    font-size: 10px;
     transform-origin: 0% 0%;
 }
 
@@ -182,12 +181,12 @@ h1 {
 
 p,
 ul {
-    font-size: 15px;
+    font-size: 1em;
 }
 
 label {
     display: block;
-    font-size: 15px;
+    font-size: 1em;
     clear: both;
 }
 
@@ -210,7 +209,7 @@ label {
 button,
 input,
 select {
-    font-size: 15px;
+    font-size: 1em;
     margin-bottom: 6px;
     box-sizing: border-box;
     font-family: 'Ubuntu', sans-serif;
@@ -304,7 +303,7 @@ input[type="checkbox"] + label:hover::before {
     height: 21px;
     width: 100%;
     max-width: 240px;
-    font-size: 15px;
+    font-size: 1em;
     border: none;
     color: #fff;
     display: block;
@@ -361,14 +360,14 @@ input[type="checkbox"] + label:hover::before {
 .overlaytab h2 {
     margin: 0 10px 5px;
     cursor: default;
-    font-size: 20px;
+    font-size: 1.3em;
     text-align: center;
 }
 
 .overlaytab h3 {
     margin: 0 10px 5px;
     cursor: default;
-    font-size: 15px;
+    font-size: 1em;
 }
 
 .botpic {
@@ -419,7 +418,7 @@ input[type="checkbox"] + label:hover::before {
 
 #winner {
     text-align: center;
-    font-size: 30px;
+    font-size: 2em;
     font-weight: bold;
     font-family: 'Itim', 'Ubuntu', sans-serif;
     margin: 0 3px;
@@ -432,7 +431,7 @@ input[type="checkbox"] + label:hover::before {
 }
 
 .olderp {
-    font-size: 15px;
+    font-size: 1em;
     float: right;
     table-layout: fixed;
     width: 160px;

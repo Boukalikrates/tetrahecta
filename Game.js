@@ -1,6 +1,6 @@
-function Game(layout) {
+class Game {
 
-    this.init = function (layout) {
+    constructor(layout) {
         this.layout = layout;
         //        if (g) {
         //            var gamob = (typeof (g) == "string") ? JSON.parse(g) : g;
@@ -12,7 +12,7 @@ function Game(layout) {
         return this;
     }
 
-    this.newgame = function (timeless, names, gamerule, notrigger) {
+    newgame(timeless, names, gamerule, notrigger) {
 
         this.board = [];
         this.tempboard = [];
@@ -29,7 +29,7 @@ function Game(layout) {
 
         this.rule = new Gamerule(gamerules[gamerule]);
         this.layout.setup(this);
-        for (var i = 0; i < this.rule.boardsize; i++) {
+        for (let i = 0; i < this.rule.boardsize; i++) {
             this.board.push(new Array(this.rule.boardsize).fill(0));
         }
 
@@ -41,7 +41,7 @@ function Game(layout) {
         $(".ngres").hide();
 
         this.guys = [];
-        for (var i = 0; i < 5; i++) {
+        for (let i = 0; i < 5; i++) {
             this.guys.push(new Guy(names[i], i, this));
         }
         if (!notrigger) {
@@ -54,54 +54,48 @@ function Game(layout) {
         return this;
     }
 
-    this.resettemp = function () {
+    resettemp() {
         this.tempboard = JSON.parse(JSON.stringify(this.board));
     }
-    this.yallwhoplay = function () {
+    yallwhoplay() {
         var result = [];
         for (var i = 0; i < this.guys.length; i++) {
             if (this.guys[i].still) result.push(i);
         }
         return result;
     }
-    this.guy = function () {
+    guy() {
         return this.guys[this.player];
     }
-    this.get = function (x, y) {
+    get(x, y) {
         if (x < 0 || y < 0 || x >= this.rule.boardsize || y >= this.rule.boardsize)
             return null;
         return this.board[x][y];
     }
 
-    this.set = function (x, y, k) {
+    set(x, y, k) {
         if (x < 0 || y < 0 || x >= this.rule.boardsize || y >= this.rule.boardsize)
             return null;
         return this.board[x][y] = k;
     }
-    this.tempset = function (x, y, k) {
+    tempset(x, y, k) {
         return this.tempboard[x][y] = k;
     }
-    this.anybody = function (still) {
+    anybody(still) {
         return this.guys.reduce(function (total, a) {
             return total || (still ? a.still : a.plays);
         }, false);
     }
 
 
-    this.paint = function (temp) {
-        //dummy function
+    paint(temp) {
         this.layout.paint(temp ? this.tempboard : this.board);
-        //        var buffer = "";
-        //        for (var i = 0; i < (this.rule.boardsize * this.rule.boardsize); i++) {
-        //            buffer += makesvg(temp ? this.tempboard[rx(i)][ry(i)] : this.board[rx(i)][ry(i)], rx(i), ry(i));
-        //        }
-        //        $("#elemcontainer").html(buffer);
     }
 
 
 
-    this.nextplayer = function (direct) {
-        var nextcandidate, nextguy, i = false;
+    nextplayer(direct) {
+        let nextcandidate, nextguy, i = false;
         this.layout.dismissBlock();
         this.resettemp();
         $("#point" + this.player).text(this.guy().countall());
@@ -109,14 +103,14 @@ function Game(layout) {
         if (!direct) {
             if (!this.anybody()) {
                 alert('Nobody to play!');
-                return overlay.open();
+                return this.layout.overlay.open();
             }
 
 
 
 
             while (!i) {
-                var yallwhoplay = this.yallwhoplay();
+                let yallwhoplay = this.yallwhoplay();
                 nextcandidate = (!yallwhoplay.includes(this.player) || yallwhoplay.indexOf(this.player) + 1 == yallwhoplay.length) ? yallwhoplay[0] : yallwhoplay[yallwhoplay.indexOf(this.player) + 1];
                 nextguy = this.guys[nextcandidate];
                 //alert(nextcandidate);
@@ -158,29 +152,28 @@ function Game(layout) {
 
 
 
-    this.gregordecision = function (nx, ny, xl) {
-        var result = 0;
+    gregordecision(nx, ny, xl) {
+        let result = 0;
         if (this.get(nx - 1, ny - 1) == xl && this.get(nx - 1, ny) != xl && this.get(nx, ny - 1) != xl) result++;
         if (this.get(nx + 1, ny - 1) == xl && this.get(nx + 1, ny) != xl && this.get(nx, ny - 1) != xl) result++;
         if (this.get(nx - 1, ny + 1) == xl && this.get(nx - 1, ny) != xl && this.get(nx, ny + 1) != xl) result++;
         if (this.get(nx + 1, ny + 1) == xl && this.get(nx + 1, ny) != xl && this.get(nx, ny + 1) != xl) result++;
         return result * 4444;
     }
-    this.martindecision = function (nx, ny, xl) {
-        var result = 0;
+    martindecision(nx, ny, xl) {
+        let result = 0;
         if (this.get(nx - 1, ny - 1) != xl && (this.get(nx - 1, ny) == xl || this.get(nx, ny - 1) == xl)) result++;
         if (this.get(nx + 1, ny - 1) != xl && (this.get(nx + 1, ny) == xl || this.get(nx, ny - 1) == xl)) result++;
         if (this.get(nx - 1, ny + 1) != xl && (this.get(nx - 1, ny) == xl || this.get(nx, ny + 1) == xl)) result++;
         if (this.get(nx + 1, ny + 1) != xl && (this.get(nx + 1, ny) == xl || this.get(nx, ny + 1) == xl)) result++;
         return result * 4444;
     }
-    this.closestdecision = function (nx, ny) {
-        var result = 0;
-        var kx = (nx * 2 < this.rule.boardsize ? nx : this.rule.boardsize - 1 - nx) + 1;
-        var ky = (ny * 2 < this.rule.boardsize ? ny : this.rule.boardsize - 1 - ny) + 1;
+    closestdecision(nx, ny) {
+        let kx = (nx * 2 < this.rule.boardsize ? nx : this.rule.boardsize - 1 - nx) + 1;
+        let ky = (ny * 2 < this.rule.boardsize ? ny : this.rule.boardsize - 1 - ny) + 1;
         return kx * ky;
     }
-    this.decision = function (a, b, c, t) {
+    decision(a, b, c, t) {
         switch (t) {
             case 1:
                 return this.gregordecision(a, b, c);
@@ -199,9 +192,9 @@ function Game(layout) {
 
 
 
-    this.clone = function () {
-        var tempguys = [];
-        for (var i = 0; i < this.guys.length; i++) {
+    clone() {
+        let tempguys = [];
+        for (let i = 0; i < this.guys.length; i++) {
             tempguys.push(this.guys[i].clone())
         }
         return {
@@ -215,11 +208,11 @@ function Game(layout) {
             guys: tempguys
         }
     }
-    this.unclone = function (obj) {
+    unclone(obj) {
         this.layout.dismissBlock();
         this.rule = new Gamerule(obj.rule);
-        var tempguys = [];
-        for (var i = 0; i < obj.guys.length; i++) {
+        let tempguys = [];
+        for (let i = 0; i < obj.guys.length; i++) {
             tempguys.push(new Guy(obj.guys[i], i, this));
         }
         this.id = obj.id;
@@ -234,16 +227,9 @@ function Game(layout) {
     }
 
 
-    this.toString = function () {
+    toString() {
         return JSON.stringify(this.clone());
     }
 
 
-
-
-
-
-
-
-    return this.init(layout);
 }

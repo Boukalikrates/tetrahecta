@@ -2,30 +2,29 @@
 
 $(document).ready(function () {
 
-    current = new Game(new SVG($('#elemcontainer')));
+    current = new Game(new SVGLayout($('#elemcontainer'),$('#brandnewoverlays')));
 
-    overlay = new Overlay();
     $("#cscheme").val(0);
     $(".backoverlay").click(function () {
-        overlay.back();
+        current.layout.overlay.back();
     });
     $(".closeoverlay").click(function () {
-        overlay.close();
+        current.layout.overlay.close();
     });
     $(".ngbtn").click(function () {
-        overlay.save();
+        c.save();
     });
     $(".ngsts").click(function () {
-        overlay.open("settings");
+        current.layout.overlay.open("settings");
     });
     $(".ngres").click(function () {
-        overlay.open("results");
+        current.layout.overlay.open("results");
     });
     $("#learnbots").click(function () {
         if (shift) {
             $(".dev").toggle();
         } else {
-            overlay.open("botinfo");
+            current.layout.overlay.open("botinfo");
         }
     });
     $(".allbots").click(function () {
@@ -34,7 +33,7 @@ $(document).ready(function () {
 
     $("#ssform").submit(function (e) {
         e.preventDefault();
-        overlay.save();
+        c.save();
         return false
     });
 
@@ -49,10 +48,15 @@ $(document).ready(function () {
             $("#elemcontainer").removeClass("so" + $(this).attr(D + "n"))
         })
     });
-
-    for (var i in gamerules) {
-        $("#grchooser").append("<option value=\"" + i + "\">" + i + "</value>");
-    }
+    $.get('gamerules.json', function (data, status) {
+        if (status == 'success') {
+            gamerules = data;
+            for (var i in gamerules) {
+                $("#grchooser").append("<option value=\"" + i + "\">" + i + "</value>");
+            }
+            current.layout.overlay.open();
+        }
+    });
     //ondragstart=oncontextmenu=function(){return false};
 
 
@@ -62,10 +66,10 @@ $(document).ready(function () {
     $(document).mousemove(c.move);
     $(document).keydown(c.key);
     $(document).mousewheel(c.wheel);
-    $(document).on('touchstart',c.touchstart);
-    $(document).on('touchmove',c.touchmove);
-    $(document).on('touchend',c.touchend);
+    $(document).on('touchstart', c.touchstart);
+    $(document).on('touchmove', c.touchmove);
+    $(document).on('touchend', c.touchend);
     zoom();
     newscheme();
-    overlay.open();
+
 });

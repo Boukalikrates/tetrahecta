@@ -9,40 +9,15 @@ var board = 0;
 var page = 0;
 var scheme = 23;
 var base = 400;
-var acti;
 var lastnick = '';
 var starts = [-1, 399, 380, 0, 19];
 var overlay;
 var current;
+var gamerules={};
 
 var pcolors = ["Ghost", "Astraea", "Nasdragul", "Jinzetsu", "Ontrin"];
 
 
-
-
-
-
-
-function move(e) {
-    var px = e.pageX / base * 400;
-    var py = e.pageY / base * 400;
-    if (acti) {
-        var movedx = px - (vert() ? 20 - acti.pb.y - acti.pd.y / 2 : acti.pb.x + 20 + acti.pd.x / 2) * 20;
-
-        var movedy = py - (vert() ? acti.pb.x + 20 + acti.pd.x / 2 : acti.pb.y + acti.pd.y / 2) * 20;
-
-        $("#dv-" + acti).css("transform", "translate(" + movedx + "px," + movedy + "px" + ")");
-    }
-}
-
-
-function abort() {
-    if (acti) {
-        styleblocks(vert() ? 90 : 0, 1, "on");
-        acti = false;
-        current.guy().validate(false, 15);
-    }
-}
 
 
 

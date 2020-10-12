@@ -1,50 +1,57 @@
-function Overlay() {
+class Overlay {
 
-    this.opened = false;
-    this.stack = [];
+    constructor(elem) {
+        this.elem = elem.filter('div').first();
 
-    this.open = function (what) {
-        if (what == undefined) what = false ? "results" : "settings";
+        this.opened = false;
+        this.stack = [];
+        this.tabs = {};
+        this.alltabs = this.elem.children();
+        //this.alltabs.each(function(){})
+        for (var i = 0; i < this.alltabs.length; i++) {
+            this.tabs[this.alltabs.eq(i).attr('data-title')] = this.alltabs.eq(i);
+        }
+    }
+
+    open(what = "settings") {
         if (this.stack[this.stack.length - 1] != what) {
-            $(".overlaytab").hide();
+            this.alltabs.hide();
             this.opened = true;
             this.stack.push(what);
-            if (what == "settings") {
-
-            }
-            $(".overlaytab." + what).show();
+            this.tabs[what].show();
         }
 
     }
-    this.back = function () {
-        $(".overlaytab").hide();
+    back() {
+        this.alltabs.hide();
         this.stack.pop();
         if (this.stack.length == 0) {
             this.opened = false;
         } else {
-            $(".overlaytab." + this.stack[this.stack.length - 1]).show();
+            this.tabs[this.stack[this.stack.length - 1]].show();
         }
     }
-    this.close = function () {
-        $(".overlaytab").hide();
+    close() {
+        this.alltabs.hide();
         this.stack = [];
         this.opened = false;
     }
-    this.save = function () {
-        if (current.gone || confirm("Really start a new game?")) {
+
+    save(game) {
+        if (game.gone || confirm("Really start a new game?")) {
             var names = [];
-            $(".ten").each(function (i) {
+            this.tabs['settings'].search('.ten').each(function (i) {
                 names.push($("#tmname" + i).val());
             });
-            current.newgame($("#timegame").is(":checked"), names, $("#grchooser").val());
+            game.newgame(this.tabs['settings'].search("#timegame").is(":checked"), names, this.tabs['settings'].search("#grchooser").val());
             this.close();
         }
     }
-    this.gameindi = function () {
+
+    gameindi() {
         if (gone || alert("Really want to start a new game?")) {
 
         }
     }
 
-    return this;
 }

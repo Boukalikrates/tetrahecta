@@ -1,37 +1,91 @@
-function Guy(a, n, parent) {
+class Guy {
+    constructor(a, n, parent) {
+
+        if (typeof (a) == "object") {
+            this.unclone(a, n, parent);
+        } else {
+            let b = getbottype(a);
+            this.game = parent;
+            this.n = n;
+            this.name = a ? a : "";
+            this.plays = !!a;
+            this.still = !!a;
+            this.bot = +b;
+            this.last = new Block("", {
+                x: 0,
+                y: 0
+            }, []);
+            this.blocks = [];
+            if (a) this.blocks = this.game.rule.toArray();
+        }
+    }
 
 
 
 
 
 
-
-
-    this.remblock = function (a) {
+    remblock(a) {
         if (!this.hasblock(a)) return false;
         if (this.blocks[this.blocks.length - 1].toString() == a) {
             this.blocks.pop();
         } else {
-            var i = this.blocks.toString().indexOf(a.toString()) / 2;
+            let i = this.blocks.toString().indexOf(a.toString()) / 2;
             this.blocks[i] = this.blocks.pop()
         }
         return this.last = a;
     }
-    this.color = function () {
-        return "stera".charAt(n);
+    color() {
+        return "stera".charAt(this.n);
     }
-    this.validate = function (b, mark) {
-        //var loop = b ? 1 : this.blocks.length;
-        var loop = (b || this.hasblock(this.game.rule.unomino)) ? 1 : this.blocks.length;
-        for (var i = 0; i < loop; i++) {
-            //var bloc = b ? b : this.blocks[i];
-            var bloc = b ? b : (this.hasblock(this.game.rule.unomino) ? this.game.rule.unomino : this.blocks[i]);
-            for (var ix = 0; ix < 2; ix++) {
-                for (var ii = 0; ii < this.game.rule.boardsize; ii++) {
-                    for (var iii = 0; iii < this.game.rule.boardsize; iii++) {
-                        for (var xi = 0; xi < 2; xi++) {
-                            for (var xii = 0; xii < 2; xii++) {
-                                if (this.setblock(bloc, ii, iii, ix, xi, xii, false, mark) && !mark) return true;
+
+
+    // validate2(b, mark) {
+    //     //let loop = b ? 1 : this.blocks.length;
+    //     let loop = (b || this.hasblock(this.game.rule.unomino)) ? 1 : this.blocks.length;
+    //     for (let i = 0; i < loop; i++) {
+    //         //let bloc = b ? b : this.blocks[i];
+    //         let bloc = b ? b : (this.hasblock(this.game.rule.unomino) ? this.game.rule.unomino : this.blocks[i]);
+    //         for (let ix = 0; ix < 2; ix++) {
+    //             for (let ii = 0; ii < this.game.rule.boardsize; ii++) {
+    //                 for (let iii = 0; iii < this.game.rule.boardsize; iii++) {
+    //                     for (let xi = 0; xi < 2; xi++) {
+    //                         for (let xii = 0; xii < 2; xii++) {
+    //                             if (this.setblock(bloc, ii, iii, ix, xi, xii, false, mark) && !mark) return true;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     if (mark) this.game.paint(true);
+    //     return false;
+    // }
+
+    validate(b, mark) {
+        for (let x = 0; x < this.game.rule.boardsize; x++) {
+            for (let y = 0; y < this.game.rule.boardsize; y++) {
+                if (this.empty(x, y) &&
+                    this.border(x, y) &&
+                    this.corner(x, y)
+                ) {
+                    let loop = b ? 1 : this.blocks.length;
+                    for (let j = 0; j < loop; j++) {
+                        let act = b ? b : this.blocks[j];
+                        for (let rx = 0; rx < 2; rx++) {
+                            for (let ry = 0; ry < 2; ry++) {
+                                for (let swap = 0; swap < 2; swap++) {
+                                    for (let i = 0; i < act.ps; i++) {
+                                        if (swap) {
+                                            let nx = ry ? (x - act.pd.y + act.pc[i].y + 1) : (x - act.pc[i].y);
+                                            let ny = rx ? (y - act.pd.x + act.pc[i].x + 1) : (y - act.pc[i].x);
+                                        } else {
+                                            let nx = rx ? (x - act.pd.x + act.pc[i].x + 1) : (x - act.pc[i].x);
+                                            let ny = ry ? (y - act.pd.y + act.pc[i].y + 1) : (y - act.pc[i].y);
+                                        }
+                                        if (this.setblock(act, nx, ny, swap, rx, ry, false, mark) && !mark) return true;
+                                    }
+                                }
                             }
                         }
                     }
@@ -41,74 +95,85 @@ function Guy(a, n, parent) {
         if (mark) this.game.paint(true);
         return false;
     }
-    this.hasblock = function (blk) {
+
+    hasblock(blk) {
         if (!blk) return false;
         return this.blocks.toString().includes(blk.toString());
     }
 
+    border(x, y) {
+        let p = this.n;
+        return !(
+            this.game.get(x - 1, y) == p ||
+            this.game.get(x + 1, y) == p ||
+            this.game.get(x, y - 1) == p ||
+            this.game.get(x, y + 1) == p);
+    }
+
+    corner(x, y) {
+        let p = this.n;
+        return (
+            this.game.get(x - 1, y - 1) == p ||
+            this.game.get(x - 1, y + 1) == p ||
+            this.game.get(x + 1, y - 1) == p ||
+            this.game.get(x + 1, y + 1) == p ||
+            (
+                this.game.rule.starts[p - 1][0]==x &&
+                this.game.rule.starts[p - 1][1]==y 
+
+            )
+        )
+            //rc(x, y) == this.game.rule.starts[p - 1]);
+    }
+
+    empty(x, y) {
+        return (this.game.get(x, y) == 0);
+    }
 
 
-    this.setblock = function (act, x, y, swap, rx, ry, draw, mark) {
+    setblock(act, x, y, swap, rx, ry, draw, mark) {
+        //if (!this.hasblock(act)) return false;
+        let p = this.n;
+        let corner = false;
 
-        var p = this.n;
-        // if(mark)console.log('[setblock]init sequence: '+p+','+act+','+x+','+y+','+swap+','+rx+','+ry+','+draw)
-        var empty = true;
-        var border = true;
-        var corner = false;
-        for (var i = 0; i < act.ps; i++) {
+        for (let i = 0; i < act.ps; i++) {
             if (swap) {
-                var nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
-                var ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
+                let nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
+                let ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
             } else {
-                var nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
-                var ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
+                let nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
+                let ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
             }
 
-            if (this.game.get(nx, ny) != 0) empty = false;
-
-            if (this.game.get(nx - 1, ny) == p ||
-                this.game.get(nx + 1, ny) == p ||
-                this.game.get(nx, ny - 1) == p ||
-                this.game.get(nx, ny + 1) == p) border = false;
-
-            if (this.game.get(nx - 1, ny - 1) == p ||
-                this.game.get(nx - 1, ny + 1) == p ||
-                this.game.get(nx + 1, ny - 1) == p ||
-                this.game.get(nx + 1, ny + 1) == p ||
-                rc(nx, ny) == this.game.rule.starts[p - 1]) corner = true;
+            if (this.corner(nx, ny)) corner = true;
+            if (!this.border(nx, ny)) return false;
+            if (!this.empty(nx, ny)) return false;
 
         }
-        if (border && corner && empty && mark) {
-            for (var i = 0; i < act.ps; i++) {
+        if (corner && mark) {
+            for (let i = 0; i < act.ps; i++) {
                 if (swap) {
-                    var nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
-                    var ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
+                    let nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
+                    let ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
                 } else {
-                    var nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
-                    var ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
+                    let nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
+                    let ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
                 }
 
-                if (!(this.game.get(nx, ny) != 0) &&
-                    !(this.game.get(nx - 1, ny) == p ||
-                        this.game.get(nx + 1, ny) == p ||
-                        this.game.get(nx, ny - 1) == p ||
-                        this.game.get(nx, ny + 1) == p) &&
-                    (this.game.get(nx - 1, ny - 1) == p ||
-                        this.game.get(nx - 1, ny + 1) == p ||
-                        this.game.get(nx + 1, ny - 1) == p ||
-                        this.game.get(nx + 1, ny + 1) == p ||
-                        rc(nx, ny) == this.game.rule.starts[p - 1])) this.game.tempset(nx, ny, mark);
+                if (this.empty(nx, ny) &&
+                    this.border(nx, ny) &&
+                    this.corner(nx, ny)) this.game.tempset(nx, ny, mark);
 
             }
         }
-        if (border && corner && empty && draw && p == this.game.player) {
-            for (var i = 0; i < act.ps; i++) {
+        if (corner && draw && p == this.game.player && this.hasblock(act)) {
+            for (let i = 0; i < act.ps; i++) {
                 if (swap) {
-                    var nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
-                    var ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
+                    let nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
+                    let ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
                 } else {
-                    var nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
-                    var ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
+                    let nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
+                    let ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
                 }
                 this.game.set(nx, ny, p);
 
@@ -116,44 +181,45 @@ function Guy(a, n, parent) {
             this.remblock(act);
             this.game.nextplayer();
         }
-        return border && corner && empty;
+        return corner;
     }
-    this.cputurn = function (bottype) {
-        if (this.n != this.game.player) return;
-        var loop = this.blocks.length;
-        var bestscor = 0;
-        var bestmovex = [];
-        var bestmovey = [];
-        var bestx;
-        var besty;
-        var bestswap;
-        var bestrx;
-        var bestry;
-        var besttype = "";
 
-        for (var mbact = 0; mbact < loop; mbact++) {
-            var act = this.blocks[mbact];
-            for (var swap = 0; swap < 2; swap++) {
-                for (var x = 0; x < this.game.rule.boardsize; x++) {
-                    for (var y = 0; y < this.game.rule.boardsize; y++) {
-                        for (var rx = 0; rx < 2; rx++) {
-                            for (var ry = 0; ry < 2; ry++) {
-                                var thisscor = 0;
-                                var anyscor = false;
-                                var valid = this.setblock(act, x, y, swap, rx, ry, false);
+    cputurn(bottype) {
+        if (this.n != this.game.player) return;
+        let loop = this.blocks.length;
+        let bestscor = 0;
+        let bestmovex = [];
+        let bestmovey = [];
+        let bestx;
+        let besty;
+        let bestswap;
+        let bestrx;
+        let bestry;
+        let besttype = "";
+
+        for (let mbact = 0; mbact < loop; mbact++) {
+            let act = this.blocks[mbact];
+            for (let swap = 0; swap < 2; swap++) {
+                for (let x = 0; x < this.game.rule.boardsize; x++) {
+                    for (let y = 0; y < this.game.rule.boardsize; y++) {
+                        for (let rx = 0; rx < 2; rx++) {
+                            for (let ry = 0; ry < 2; ry++) {
+                                let thisscor = 0;
+                                let anyscor = false;
+                                let valid = this.setblock(act, x, y, swap, rx, ry, false);
                                 if (valid) {
-                                    for (var i = 0; i < act.ps; i++) {
+                                    for (let i = 0; i < act.ps; i++) {
                                         if (swap) {
-                                            var nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
-                                            var ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
+                                            let nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
+                                            let ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
                                         } else {
-                                            var nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
-                                            var ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
+                                            let nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
+                                            let ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
                                         }
-                                        for (var xl = 1; xl < 5; xl++) {
+                                        for (let xl = 1; xl < 5; xl++) {
                                             if (xl == this.n) continue;
 
-                                            var decided = this.game.decision(nx, ny, xl, bottype) + this.game.closestdecision(nx, ny, xl);
+                                            let decided = this.game.decision(nx, ny, xl, bottype) + this.game.closestdecision(nx, ny, xl);
                                             thisscor += (Math.random() * 0.2 + 0.9) * decided;
                                             if (decided) anyscor = true;
 
@@ -194,17 +260,20 @@ function Guy(a, n, parent) {
 
     }
 
-    this.pickblock = function (x, y) {
-        for (var j = 0; j < this.blocks.length; j++) {
-            var b = this.blocks[j];
-            for (var i = 0; i < b.ps; i++) {
-                if (b.pc[i].x + b.pb.x == x && b.pc[i].y + b.pb.y == y && b.p == this.game.layout.page) return b;
+
+    pickblock(x, y) {
+        for (let j = 0; j < this.blocks.length; j++) {
+            let b = this.blocks[j];
+            for (let i = 0; i < b.ps; i++) {
+                let bx = b.pc[i].x + b.pb.x;
+                let by = b.pc[i].y + b.pb.y;
+                if (bx - 0.5 < x && x < bx + 1.5 && by - 0.5 < y && y < by + 1.5 && b.p == this.game.layout.page) return b;
             }
         }
     }
-    this.count = function () {
-        var pts0 = [];
-        for (var i = 0; i < this.game.rule.counts.length; i++) { //most beautiful line of tetrahecta code ^^
+    count() {
+        let pts0 = [];
+        for (let i = 0; i < this.game.rule.counts.length; i++) { //most beautiful line of tetrahecta code ^^
             pts0[i] = i * this.game.rule.counts[i];
         }
         for (i in this.blocks) {
@@ -212,12 +281,12 @@ function Guy(a, n, parent) {
         }
         return pts0;
     }
-    this.countall = function () {
-        var isclearbonus = this.blocks.length == 0;
-        var isubonus = isclearbonus ? (this.last.ps == 1) : (this.count()[1] == 0 && this.game.gone);
+    countall() {
+        let isclearbonus = this.blocks.length == 0;
+        let isubonus = isclearbonus ? (this.last.ps == 1) : (this.count()[1] == 0 && this.game.gone);
         return this.count().reduce(function (a, b) {
-                return a + b
-            }) +
+            return a + b
+        }) +
             (isclearbonus ? this.game.rule.clearbonus : 0) +
             (isubonus ? this.game.rule.ubonus : 0)
     }
@@ -228,9 +297,9 @@ function Guy(a, n, parent) {
 
 
 
-    this.clone = function () {
-        var tmpblock = '';
-        for (var i = 0; i < this.blocks.length; i++) {
+    clone() {
+        let tmpblock = '';
+        for (let i = 0; i < this.blocks.length; i++) {
             tmpblock += this.blocks[i];
         }
         return {
@@ -242,9 +311,9 @@ function Guy(a, n, parent) {
             blocks: this.blocks.length == 0 ? [] : tmpblock.split("")
         }
     }
-    this.unclone = function (obj, n, parent) {
-        var tmpblk = [];
-        for (var i = 0; i < obj.blocks.length; i++) {
+    unclone(obj, n, parent) {
+        let tmpblk = [];
+        for (let i = 0; i < obj.blocks.length; i++) {
             tmpblk.push(parent.rule[obj.blocks[i]])
         }
         this.game = parent;
@@ -257,26 +326,9 @@ function Guy(a, n, parent) {
         this.blocks = tmpblk;
         return this;
     }
-    this.toString = function () {
-        var result = this.clone();
+    toString() {
+        let result = this.clone();
         return JSON.stringify(result);
     }
 
-
-    if (typeof (a) == "object") return this.unclone(a, n, parent);
-    var b = getbottype(a);
-    this.game = parent;
-    this.n = n;
-    this.name = a ? a : "";
-    this.plays = !!a;
-    this.still = !!a;
-    this.bot = +b;
-    this.last = new Block("", {
-        x: 0,
-        y: 0
-    }, []);
-    this.blocks = [];
-    if (a) this.blocks = this.game.rule.toArray();
-
-    return this;
 }
