@@ -136,7 +136,7 @@ h1 {
     cursor: default;
 }
 
-.nicelink:hover{
+.nicelink:hover {
     cursor: pointer;
     color: #fff;
     text-decoration: underline;
@@ -370,6 +370,22 @@ input[type="checkbox"]+label:hover::before {
     flex: 1 1 100px;
     padding: 0 10px;
     overflow: auto;
+}
+
+.backoverlay {
+    float: left;
+    font-style: normal;
+    font-variant-caps: normal;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.closeoverlay {
+    float: right;
+    font-style: normal;
+    font-variant-caps: normal;
+    font-weight: normal;
+    cursor: pointer;
 }
 
 .great, .is {
