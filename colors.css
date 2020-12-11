@@ -2,27 +2,21 @@
     0% {
         color: #00ff00
     }
-
     16.7% {
         color: #00ffff
     }
-
     33.3% {
         color: #0000ff
     }
-
     50.0% {
         color: #ff00ff
     }
-
     66.7% {
         color: #ff0000
     }
-
     83.3% {
         color: #ffff00
     }
-
     100% {
         color: #00ff00
     }
@@ -44,195 +38,39 @@
     animation: colorspin 4s linear infinite 3s;
 }
 
-.scheme00 .t,
-.scheme06 .a,
-.scheme12 .r,
-.scheme18 .e {
+.t {
     color: #0040ff
 }
 
-.scheme01 .t,
-.scheme07 .a,
-.scheme13 .r,
-.scheme19 .e {
-    color: #0000ff
-}
-
-.scheme02 .t,
-.scheme08 .a,
-.scheme14 .r,
-.scheme20 .e {
-    color: #4000ff
-}
-
-.scheme03 .t,
-.scheme09 .a,
-.scheme15 .r,
-.scheme21 .e {
-    color: #8000ff
-}
-
-.scheme04 .t,
-.scheme10 .a,
-.scheme16 .r,
-.scheme22 .e {
-    color: #c000ff
-}
-
-.scheme05 .t,
-.scheme11 .a,
-.scheme17 .r,
-.scheme23 .e {
-    color: #ff00ff
-}
-
-.scheme06 .t,
-.scheme12 .a,
-.scheme18 .r,
-.scheme00 .e {
+.e {
     color: #ff00c0
 }
 
-.scheme07 .t,
-.scheme13 .a,
-.scheme19 .r,
-.scheme01 .e {
-    color: #ff0080
-}
-
-.scheme08 .t,
-.scheme14 .a,
-.scheme20 .r,
-.scheme02 .e {
-    color: #ff0040
-}
-
-.scheme09 .t,
-.scheme15 .a,
-.scheme21 .r,
-.scheme03 .e {
-    color: #ff0000
-}
-
-.scheme10 .t,
-.scheme16 .a,
-.scheme22 .r,
-.scheme04 .e {
-    color: #ff4000
-}
-
-.scheme11 .t,
-.scheme17 .a,
-.scheme23 .r,
-.scheme05 .e {
-    color: #ff8000
-}
-
-.scheme12 .t,
-.scheme18 .a,
-.scheme00 .r,
-.scheme06 .e {
+.r {
     color: #ffc000
 }
 
-.scheme13 .t,
-.scheme19 .a,
-.scheme01 .r,
-.scheme07 .e {
-    color: #ffff00
-}
-
-.scheme14 .t,
-.scheme20 .a,
-.scheme02 .r,
-.scheme08 .e {
-    color: #c0ff00
-}
-
-.scheme15 .t,
-.scheme21 .a,
-.scheme03 .r,
-.scheme09 .e {
-    color: #80ff00
-}
-
-.scheme16 .t,
-.scheme22 .a,
-.scheme04 .r,
-.scheme10 .e {
-    color: #40ff00
-}
-
-.scheme17 .t,
-.scheme23 .a,
-.scheme05 .r,
-.scheme11 .e {
-    color: #00ff00
-}
-
-.scheme18 .t,
-.scheme00 .a,
-.scheme06 .r,
-.scheme12 .e {
+.a {
     color: #00ff40
 }
 
-.scheme19 .t,
-.scheme01 .a,
-.scheme07 .r,
-.scheme13 .e {
-    color: #00ff80
-}
-
-.scheme20 .t,
-.scheme02 .a,
-.scheme08 .r,
-.scheme14 .e {
-    color: #00ffc0
-}
-
-.scheme21 .t,
-.scheme03 .a,
-.scheme09 .r,
-.scheme15 .e {
-    color: #00ffff
-}
-
-.scheme22 .t,
-.scheme04 .a,
-.scheme10 .r,
-.scheme16 .e {
-    color: #00c0ff
-}
-
-.scheme23 .t,
-.scheme05 .a,
-.scheme11 .r,
-.scheme17 .e {
-    color: #0080ff
-}
-
-.t,
-.e,
-.r,
-.a {
+.t, .e, .r, .a {
     transition: color 300ms;
 }
 
-
 /* ======== SVG ======== */
 
-svg *{
+svg * {
     stroke-width: inherit;
 }
 
-svg .blocksphere{
-    fill:transparent;
+svg .blocksphere {
+    fill: transparent;
     stroke: transparent;
     stroke-dasharray: 10 10;
 }
 
-svg .active .blocksphere{
+svg .active .blocksphere {
     stroke: #444;
 }
 
@@ -258,222 +96,7 @@ svg .pk10 {
     transition: fill 300ms, stroke 300ms, opacity 300ms;
 }
 
-svg .block.hover .pk5 ,
-svg .block.active .pk5 {
-    fill: #fff;
-    stroke: #fff;
-}
-
-.scheme00 svg .ps1,
-.scheme18 svg .ps2,
-.scheme12 svg .ps3,
-.scheme06 svg .ps4 {
-    fill: #0040ff;
-    stroke: #0040ff;
-}
-
-.scheme01 svg .ps1,
-.scheme19 svg .ps2,
-.scheme13 svg .ps3,
-.scheme07 svg .ps4 {
-    fill: #0000ff;
-    stroke: #0000ff;
-}
-
-.scheme02 svg .ps1,
-.scheme20 svg .ps2,
-.scheme14 svg .ps3,
-.scheme08 svg .ps4 {
-    fill: #4000ff;
-    stroke: #4000ff;
-}
-
-.scheme03 svg .ps1,
-.scheme21 svg .ps2,
-.scheme15 svg .ps3,
-.scheme09 svg .ps4 {
-    fill: #8000ff;
-    stroke: #8000ff;
-}
-
-.scheme04 svg .ps1,
-.scheme22 svg .ps2,
-.scheme16 svg .ps3,
-.scheme10 svg .ps4 {
-    fill: #c000ff;
-    stroke: #c000ff;
-}
-
-.scheme05 svg .ps1,
-.scheme23 svg .ps2,
-.scheme17 svg .ps3,
-.scheme11 svg .ps4 {
-    fill: #ff00ff;
-    stroke: #ff00ff;
-}
-
-.scheme06 svg .ps1,
-.scheme00 svg .ps2,
-.scheme18 svg .ps3,
-.scheme12 svg .ps4 {
-    fill: #ff00c0;
-    stroke: #ff00c0;
-}
-
-.scheme07 svg .ps1,
-.scheme01 svg .ps2,
-.scheme19 svg .ps3,
-.scheme13 svg .ps4 {
-    fill: #ff0080;
-    stroke: #ff0080;
-}
-
-.scheme08 svg .ps1,
-.scheme02 svg .ps2,
-.scheme20 svg .ps3,
-.scheme14 svg .ps4 {
-    fill: #ff0040;
-    stroke: #ff0040;
-}
-
-.scheme09 svg .ps1,
-.scheme03 svg .ps2,
-.scheme21 svg .ps3,
-.scheme15 svg .ps4 {
-    fill: #ff0000;
-    stroke: #ff0000;
-}
-
-.scheme10 svg .ps1,
-.scheme04 svg .ps2,
-.scheme22 svg .ps3,
-.scheme16 svg .ps4 {
-    fill: #ff4000;
-    stroke: #ff4000;
-}
-
-.scheme11 svg .ps1,
-.scheme05 svg .ps2,
-.scheme23 svg .ps3,
-.scheme17 svg .ps4 {
-    fill: #ff8000;
-    stroke: #ff8000;
-}
-
-.scheme12 svg .ps1,
-.scheme06 svg .ps2,
-.scheme00 svg .ps3,
-.scheme18 svg .ps4 {
-    fill: #ffc000;
-    stroke: #ffc000;
-}
-
-.scheme13 svg .ps1,
-.scheme07 svg .ps2,
-.scheme01 svg .ps3,
-.scheme19 svg .ps4 {
-    fill: #ffff00;
-    stroke: #ffff00;
-}
-
-.scheme14 svg .ps1,
-.scheme08 svg .ps2,
-.scheme02 svg .ps3,
-.scheme20 svg .ps4 {
-    fill: #c0ff00;
-    stroke: #c0ff00;
-}
-
-.scheme15 svg .ps1,
-.scheme09 svg .ps2,
-.scheme03 svg .ps3,
-.scheme21 svg .ps4 {
-    fill: #80ff00;
-    stroke: #80ff00;
-}
-
-.scheme16 svg .ps1,
-.scheme10 svg .ps2,
-.scheme04 svg .ps3,
-.scheme22 svg .ps4 {
-    fill: #40ff00;
-    stroke: #40ff00;
-}
-
-.scheme17 svg .ps1,
-.scheme11 svg .ps2,
-.scheme05 svg .ps3,
-.scheme23 svg .ps4 {
-    fill: #00ff00;
-    stroke: #00ff00;
-}
-
-.scheme18 svg .ps1,
-.scheme12 svg .ps2,
-.scheme06 svg .ps3,
-.scheme00 svg .ps4 {
-    fill: #00ff40;
-    stroke: #00ff40;
-}
-
-.scheme19 svg .ps1,
-.scheme13 svg .ps2,
-.scheme07 svg .ps3,
-.scheme01 svg .ps4 {
-    fill: #00ff80;
-    stroke: #00ff80;
-}
-
-.scheme20 svg .ps1,
-.scheme14 svg .ps2,
-.scheme08 svg .ps3,
-.scheme02 svg .ps4 {
-    fill: #00ffc0;
-    stroke: #00ffc0;
-}
-
-.scheme21 svg .ps1,
-.scheme15 svg .ps2,
-.scheme09 svg .ps3,
-.scheme03 svg .ps4 {
-    fill: #00ffff;
-    stroke: #00ffff;
-}
-
-.scheme22 svg .ps1,
-.scheme16 svg .ps2,
-.scheme10 svg .ps3,
-.scheme04 svg .ps4 {
-    fill: #00c0ff;
-    stroke: #00c0ff;
-}
-
-.scheme23 svg .ps1,
-.scheme17 svg .ps2,
-.scheme11 svg .ps3,
-.scheme05 svg .ps4 {
-    fill: #0080ff;
-    stroke: #0080ff;
-}
-
-
-
-
-svg.so1 .ps2,
-svg.so1 .ps0,
-svg.so1 .ps3,
-svg.so1 .ps4,
-svg.so2 .ps1,
-svg.so2 .ps0,
-svg.so2 .ps3,
-svg.so2 .ps4,
-svg.so3 .ps2,
-svg.so3 .ps0,
-svg.so3 .ps1,
-svg.so3 .ps4,
-svg.so4 .ps2,
-svg.so4 .ps0,
-svg.so4 .ps3,
-svg.so4 .ps1 {
-    opacity: 0.2
+svg .block.hover .pk5, svg .block.active .pk5 {
+    fill: #fff ;
+    stroke: #fff ;
 }

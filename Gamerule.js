@@ -5,8 +5,8 @@ class Gamerule {
             blkp = {
                 clearbonus: 0,
                 ubonus: 0,
-                boardsize: 20,
-                starts: [[19,19],[0,19],[0,0],[19,0]],
+                boardsize: 1,
+                starts: [],
                 data: {}
             };
         for (x in blkp.data) {

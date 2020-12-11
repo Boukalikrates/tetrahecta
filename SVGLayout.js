@@ -1,6 +1,6 @@
 class SVGLayout {
-    constructor(elem, elem2) {
-        this.elem = elem.filter('svg').first().attr('viewBox', '0 0 800 400'); //.attr('width', 800).attr('height', 400);
+    constructor(elem) {
+        this.elem = elem.find('svg').first().attr('viewBox', '0 0 800 400'); //.attr('width', 800).attr('height', 400);
         this.elem.html('\
             <defs>\
                 <filter id="dilate">\
@@ -21,8 +21,6 @@ class SVGLayout {
         this.sphere = 45;
 
 
-        //overlay
-        this.overlay = new Overlay(elem2);
 
         //presetup
         this.availables = [];
@@ -62,35 +60,69 @@ class SVGLayout {
         return this.positions[this.active];
     }
 
+    format(str, args) {
+        str = str.toString();
+        for (let key in args) {
+            str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
+        }
+        return str;
+    }
+
+
+
+
     //PAINTING
 
 
 
-    makeelem(n, x, y) {
-        let s = schememod(scheme);
-        let c = n % 5;
-        let i = (15 - n) % 5;
+    makeelem(n, x, y, colour = '#444') {
+
+        let c = n > 0 ? colour : '#444'
         let a = this.tilesize;
         let b = this.px;
-        let z = 2 * b;
-        switch (n + i) {
+        switch ((n % 5 + 5) % 5) {
             case 0: //empty
-                return '<rect class="ps{0} pk0" x="{1}" y={2} width="{3}" height="{3}" stroke-dasharray="{4},{6},{5},{6},{5},{6},{5},{6},{5}"></rect>'.format(c, x * a, y * a, 20 * b, 4 * b, 8 * b, 12 * b);
-            case 5: //tile
-                return '<rect class="ps{0} pk5" x="{1}" y={2} width="{3}" height="{3}"></rect>'.format(c, x * a + 2 * b, y * a + 2 * b, 16 * b);
-            case 10: //dashed
-                return '<rect class="ps{0} pk10" x="{1}" y={2} width="{3}" height="{3}" stroke-dasharray="{4},{5},{5},{5},{5},{5},{5},{5},{5}"></rect>'.format(c, x * a + 2 * b, y * a + 2 * b, 16 * b, 4 * b, 8 * b);
-            case 15: //dot
-                let d = x * a + 4 * b;
-                let l = x * a + 16 * b;
-                let p = y * a + 4 * b;
-                let v = y * a + 16 * b;
-                return '<path class="ps' + n + ' pk15" style="fill:#' + s[c] + ';stroke:#000;stroke-width:' + 3 * z + '" d="M ' + d + ' ' + p + ' L ' + l + ' ' + p + ' L ' + l + ' ' + v + ' L ' + d + ' ' + v + ' z"></path>';
+                return this.format('<rect style="" class="pk0" x="{x}" y={y} width="{w}" height="{w}" stroke-dasharray="{d4},{d12},{d8},{d12},{d8},{d12},{d8},{d12},{d8}"></rect>', {
+                    x: x * a,
+                    y: y * a,
+                    w: 20 * b,
+                    d4: 4 * b,
+                    d8: 8 * b,
+                    d12: 12 * b
+                });
+            case 1: //tile
+                return this.format('<rect style="fill:{c};stroke:{c}" class="pk5" x="{x}" y={y} width="{w}" height="{w}"></rect>', {
+                    c: c,
+                    x: x * a + 2 * b,
+                    y: y * a + 2 * b,
+                    w: 16 * b
+                });
+            case 2: //dashed
+                return this.format('<rect style="stroke:{c}" class="pk10" x="{x}" y={y} width="{w}" height="{w}" stroke-dasharray="{d4},{d8},{d8},{d8},{d8},{d8},{d8},{d8},{d8}"></rect>', {
+                    c: c,
+                    x: x * a + 2 * b,
+                    y: y * a + 2 * b,
+                    w: 16 * b,
+                    d4: 4 * b,
+                    d8: 8 * b
+                });
+            case 3: //dot
+                // let d = x * a + 4 * b;
+                // let l = x * a + 16 * b;
+                // let p = y * a + 4 * b;
+                // let v = y * a + 16 * b;
+                return this.format('<rect style="fill:{c}" class="pk15" x="{x}" y={y} width="{w}" height="{w}"></rect>', {
+                    c: c,
+                    x: x * a + 7 * b,
+                    y: y * a + 7 * b,
+                    w: 6 * b
+                })
+            // return '<path class="ps' + n + ' pk15" style="fill:#' + s[c] + ';stroke:#000;stroke-width:' + 3 * z + '" d="M ' + d + ' ' + p + ' L ' + l + ' ' + p + ' L ' + l + ' ' + v + ' L ' + d + ' ' + v + ' z"></path>';
             default:
                 return '<g></g>';
         }
     }
-    makeblock(f, c) {
+    makeblock(f, n, colour) {
         this.positions[f.id] = {
             x: f.pb.x * this.tilesize + 400,
             y: f.pb.y * this.tilesize,
@@ -100,55 +132,72 @@ class SVGLayout {
         };
 
         //result = '<g class="block" data-blockid="' + f.id + '"><g class="subblock" transform="scale(1,1) translate(0,0) rotate(0,' + this.positions[f.id].cx + ',' + this.positions[f.id].cy + ')">';
-        let result = '<g class="block" data-blockid="{0}" data-available="{3}"><g class="subblock" transform="scale(1,1) rotate(0) translate({1},{2})">'
-            .format(f.id, -this.positions[f.id].cx, -this.positions[f.id].cy);
+        let result = this.format('<g class="block" data-blockid="{0}" data-available="{3}"><g class="subblock" transform="scale(1,1) rotate(0) translate({1},{2})">',
+            [f.id, -this.positions[f.id].cx, -this.positions[f.id].cy]);
 
         for (let i = 0; i < f.ps; i++) {
-            result += this.makeelem(c, f.pc[i].x, f.pc[i].y);
+            result += this.makeelem(n, f.pc[i].x, f.pc[i].y, colour);
         }
-        result += '</g><circle class="blocksphere" r="{0}"></g>'.format(this.sphere);
+        result += this.format('</g><circle class="blocksphere" r="{0}"></g>', [this.sphere]);
         return result;
     }
 
     makeshapes(guy) {
-        this.availables=[];
+        this.availables = [];
         return guy.game.rule.each(function (a, b, c) {
             let guy = c[1];
             let that = c[2];
             let e = guy.blocks.toString().includes(b);
-            let f = guy.validate(b);
+            let f = guy.checkavailable(b);
             let g = guy.last == b;
-            let n = guy.n;
+            let n = guy.plate;
+            let colour = guy.colour;
 
             if (e) that.availables.push(b.id);
-            return that.makeblock(b, e ? (f ? n : 5) : (g ? n + 5 : 10), e);
+            return that.makeblock(b, e ? (f ? n : -4) : (g ? n + 1 : -3), colour);
         }, guy, this).join('');
     }
 
-    makepageindicator(pages, n) {
+    makepageindicator(guy) {
+        let pages = guy.game.rule.pages;
+        let colour = guy.colour;
         if (pages < 2) return '';
         let result = '';
         for (let i = 0; i < pages; i++) {
-            result += '<circle r="{0}" class="ps0 pk10" cx="{1}" cy="{2}" />'.format(this.tilesize / 4, 400 + this.tilesize / 2, 200 + this.tilesize * (-i + pages / 2 - 0.5));
+            result += this.format('<circle r="{r}" class="ps0 pk10" cx="{cx}" cy="{cy}" />', {
+                r: this.tilesize / 4,
+                cx: 400 + this.tilesize / 2,
+                cy: 200 + this.tilesize * (-i + pages / 2 - 0.5)
+            });
         }
-        result += '<circle r="{0}" class="ps{3} pk5 spicircle" cx="{1}" cy="{2}" transform="translate(0,0)"/>'.format(this.tilesize / 4, 400 + this.tilesize / 2, 200 + this.tilesize * (-pages / 2 + 0.5), n);
+        result += this.format('<circle r="{r}" style="fill:{c};stroke:{c}" class="pk5 spicircle" cx="{cx}" cy="{cy}" transform="translate(0,0)"/>', {
+            r: this.tilesize / 4,
+            cx: 400 + this.tilesize / 2,
+            cy: 200 + this.tilesize * (-pages / 2 + 0.5),
+            c: colour
+        });
         return result;
     }
 
     paintshapes(guy) {
         this.sc.html(this.makeshapes(guy));
-        this.spi.html(this.makepageindicator(guy.game.rule.pages, guy.n));
+        this.spi.html(this.makepageindicator(guy));
         this.changePage(this.page, true);
     }
 
-    paint(board) {
+
+
+    paint(board, colours) {
         let buffer = '';
-        for (let i = 0; i < (this.boardsize * this.boardsize); i++) {
-            buffer += this.makeelem(board[rx(i)][ry(i)], rx(i), ry(i));
+        for (let x = 0; x < (this.boardsize); x++) {
+            for (let y = 0; y < (this.boardsize); y++) {
+                let n = board[x][y];
+                let colour = colours[Math.floor(n / 5)]
+                buffer += this.makeelem(n, x, y, colour);
+            }
         }
         this.mb.html(buffer);
 
-        //this.sc.html(this.makeshapes(current.guy()))
     }
 
 
@@ -177,9 +226,9 @@ class SVGLayout {
     }
 
     hoverBlock(idlist) {
-        let id=idlist.find(function(a){
-            return this.availables.includes(a.id); 
-        },this).id;
+        let id = idlist.find(function (a) {
+            return this.availables.includes(a.id);
+        }, this).id;
         this.findBlock(this.hover).removeClass('hover');
         this.hover = id;
         this.findBlock(this.hover).addClass('hover');
@@ -192,9 +241,9 @@ class SVGLayout {
         this.spi.find('.spicircle').animate({
             svgTransform: 'translate(0 ' + p * this.tilesize + ')'
         }, {
-                duration: force ? 0 : this.duration,
-                queue: false
-            });
+            duration: force ? 0 : this.duration,
+            queue: false
+        });
 
         if (force || p != this.page) {
             this.page = p;
@@ -212,17 +261,17 @@ class SVGLayout {
         block.animate({
             svgTransform: 'translate(' + xx + ' ' + yy + ')'
         }, {
-                duration: instant ? 0 : this.duration,
-                queue: false
-            });
+            duration: instant ? 0 : this.duration,
+            queue: false
+        });
     }
     updateBlock(instant = false) {
         this.findBlock(this.active).animate({
             svgTransform: 'translate(' + this.translationX + ' ' + this.translationY + ')'
         }, {
-                duration: instant ? 0 : this.duration,
-                queue: false
-            });
+            duration: instant ? 0 : this.duration,
+            queue: false
+        });
     }
     updateSubBlock() {
         /* this piece of code is for those we hate the most 😜
@@ -246,13 +295,12 @@ class SVGLayout {
          */
 
         this.findBlock(this.active).find('.subblock').animate({
-            svgTransform: 'scale(1,{0}) rotate({1}) translate({2},{3})'
-                .format(this.scale, this.rotation, -this.pa.cx, -this.pa.cy)
+            svgTransform: this.format('scale(1,{0}) rotate({1}) translate({2},{3})', [this.scale, this.rotation, -this.pa.cx, -this.pa.cy])
             //svgTransform: 'matrix({0} {1} {2} {3} {4} {5})'.format(a,b,c,d,e,f)
         }, {
-                duration: this.duration,
-                queue: false
-            });
+            duration: this.duration,
+            queue: false
+        });
     }
 
 

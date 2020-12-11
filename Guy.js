@@ -4,13 +4,24 @@ class Guy {
         if (typeof (a) == "object") {
             this.unclone(a, n, parent);
         } else {
-            let b = getbottype(a);
+            let hardcodedColours = {
+                'bouk': '#f50',
+                'boukalikrates': '#f50',
+                'pepe': '#699848',
+                'lamcia': 'white',
+                'me_in_my_crush_eyes': 'transparent'
+            }
+            if (!a) a = 'Player ' + (n + 1);
+            let b = this.getbottype(a);
             this.game = parent;
             this.n = n;
-            this.name = a ? a : "";
-            this.plays = !!a;
-            this.still = !!a;
+            this.plate = n * 5 + 1;
+            this.name = a;
+            this.plays = true;
+            this.still = true;
             this.bot = +b;
+
+            this.colour = hardcodedColours[a.toLowerCase()] ? hardcodedColours[a.toLowerCase()] : "hsl(" + (360 * this.n / this.game.players + 225) + ",100%,50%)";
             this.last = new Block("", {
                 x: 0,
                 y: 0
@@ -22,6 +33,20 @@ class Guy {
 
 
 
+    getbottype(a) {
+        if (!a) return 0;
+        switch (a.toLowerCase()) {
+            case "_bot":
+                return Math.floor(Math.random() * 3) + 1;
+            case "_gregor":
+                return 1;
+            case "_martin":
+                return 2;
+            case "_joseph":
+                return 3;
+        }
+        return 0;
+    }
 
 
 
@@ -36,33 +61,11 @@ class Guy {
         return this.last = a;
     }
     color() {
-        return "stera".charAt(this.n);
+        return "tera".charAt(this.n);
     }
 
 
-    // validate2(b, mark) {
-    //     //let loop = b ? 1 : this.blocks.length;
-    //     let loop = (b || this.hasblock(this.game.rule.unomino)) ? 1 : this.blocks.length;
-    //     for (let i = 0; i < loop; i++) {
-    //         //let bloc = b ? b : this.blocks[i];
-    //         let bloc = b ? b : (this.hasblock(this.game.rule.unomino) ? this.game.rule.unomino : this.blocks[i]);
-    //         for (let ix = 0; ix < 2; ix++) {
-    //             for (let ii = 0; ii < this.game.rule.boardsize; ii++) {
-    //                 for (let iii = 0; iii < this.game.rule.boardsize; iii++) {
-    //                     for (let xi = 0; xi < 2; xi++) {
-    //                         for (let xii = 0; xii < 2; xii++) {
-    //                             if (this.setblock(bloc, ii, iii, ix, xi, xii, false, mark) && !mark) return true;
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     if (mark) this.game.paint(true);
-    //     return false;
-    // }
-
-    validate(b, mark) {
+    checkavailable(b, mark) {
         for (let x = 0; x < this.game.rule.boardsize; x++) {
             for (let y = 0; y < this.game.rule.boardsize; y++) {
                 if (this.empty(x, y) &&
@@ -76,12 +79,15 @@ class Guy {
                             for (let ry = 0; ry < 2; ry++) {
                                 for (let swap = 0; swap < 2; swap++) {
                                     for (let i = 0; i < act.ps; i++) {
+                                        let nx;
+                                        let ny;
+
                                         if (swap) {
-                                            let nx = ry ? (x - act.pd.y + act.pc[i].y + 1) : (x - act.pc[i].y);
-                                            let ny = rx ? (y - act.pd.x + act.pc[i].x + 1) : (y - act.pc[i].x);
+                                            nx = ry ? (x - act.pd.y + act.pc[i].y + 1) : (x - act.pc[i].y);
+                                            ny = rx ? (y - act.pd.x + act.pc[i].x + 1) : (y - act.pc[i].x);
                                         } else {
-                                            let nx = rx ? (x - act.pd.x + act.pc[i].x + 1) : (x - act.pc[i].x);
-                                            let ny = ry ? (y - act.pd.y + act.pc[i].y + 1) : (y - act.pc[i].y);
+                                            nx = rx ? (x - act.pd.x + act.pc[i].x + 1) : (x - act.pc[i].x);
+                                            ny = ry ? (y - act.pd.y + act.pc[i].y + 1) : (y - act.pc[i].y);
                                         }
                                         if (this.setblock(act, nx, ny, swap, rx, ry, false, mark) && !mark) return true;
                                     }
@@ -102,7 +108,7 @@ class Guy {
     }
 
     border(x, y) {
-        let p = this.n;
+        let p = this.plate;
         return !(
             this.game.get(x - 1, y) == p ||
             this.game.get(x + 1, y) == p ||
@@ -111,23 +117,23 @@ class Guy {
     }
 
     corner(x, y) {
-        let p = this.n;
+        let p = this.plate;
         return (
             this.game.get(x - 1, y - 1) == p ||
             this.game.get(x - 1, y + 1) == p ||
             this.game.get(x + 1, y - 1) == p ||
             this.game.get(x + 1, y + 1) == p ||
             (
-                this.game.rule.starts[p - 1][0]==x &&
-                this.game.rule.starts[p - 1][1]==y 
+                this.game.rule.starts[this.n][0] == x &&
+                this.game.rule.starts[this.n][1] == y
 
             )
         )
-            //rc(x, y) == this.game.rule.starts[p - 1]);
+        //rc(x, y) == this.game.rule.starts[p - 1]);
     }
 
     empty(x, y) {
-        return (this.game.get(x, y) == 0);
+        return (this.game.get(x, y) % 5 == 0);
     }
 
 
@@ -135,14 +141,16 @@ class Guy {
         //if (!this.hasblock(act)) return false;
         let p = this.n;
         let corner = false;
+        let nx;
+        let ny;
 
         for (let i = 0; i < act.ps; i++) {
             if (swap) {
-                let nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
-                let ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
+                nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
+                ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
             } else {
-                let nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
-                let ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
+                nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
+                ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
             }
 
             if (this.corner(nx, ny)) corner = true;
@@ -152,12 +160,14 @@ class Guy {
         }
         if (corner && mark) {
             for (let i = 0; i < act.ps; i++) {
+                let nx;
+                let ny;
                 if (swap) {
-                    let nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
-                    let ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
+                    nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
+                    ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
                 } else {
-                    let nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
-                    let ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
+                    nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
+                    ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
                 }
 
                 if (this.empty(nx, ny) &&
@@ -168,14 +178,16 @@ class Guy {
         }
         if (corner && draw && p == this.game.player && this.hasblock(act)) {
             for (let i = 0; i < act.ps; i++) {
+                let nx;
+                let ny;
                 if (swap) {
-                    let nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
-                    let ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
+                    nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
+                    ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
                 } else {
-                    let nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
-                    let ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
+                    nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
+                    ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
                 }
-                this.game.set(nx, ny, p);
+                this.game.set(nx, ny, this.plate);
 
             }
             this.remblock(act);
@@ -209,15 +221,18 @@ class Guy {
                                 let valid = this.setblock(act, x, y, swap, rx, ry, false);
                                 if (valid) {
                                     for (let i = 0; i < act.ps; i++) {
+                                        let nx;
+                                        let ny;
                                         if (swap) {
-                                            let nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
-                                            let ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
+                                            nx = ry ? (x + act.pd.y - act.pc[i].y - 1) : (x + act.pc[i].y);
+                                            ny = rx ? (y + act.pd.x - act.pc[i].x - 1) : (y + act.pc[i].x);
                                         } else {
-                                            let nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
-                                            let ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
+                                            nx = rx ? (x + act.pd.x - act.pc[i].x - 1) : (x + act.pc[i].x);
+                                            ny = ry ? (y + act.pd.y - act.pc[i].y - 1) : (y + act.pc[i].y);
                                         }
-                                        for (let xl = 1; xl < 5; xl++) {
-                                            if (xl == this.n) continue;
+                                        for (let xl = 1; xl < this.game.players * 5; xl += 5) {
+
+                                            if (xl == this.plate) continue;
 
                                             let decided = this.game.decision(nx, ny, xl, bottype) + this.game.closestdecision(nx, ny, xl);
                                             thisscor += (Math.random() * 0.2 + 0.9) * decided;
@@ -276,7 +291,7 @@ class Guy {
         for (let i = 0; i < this.game.rule.counts.length; i++) { //most beautiful line of tetrahecta code ^^
             pts0[i] = i * this.game.rule.counts[i];
         }
-        for (i in this.blocks) {
+        for (let i in this.blocks) {
             pts0[this.blocks[i].ps] -= this.blocks[i].ps;
         }
         return pts0;
