@@ -2,6 +2,8 @@
 
 Turn based strategy board game for 4 people. A clone of the popular board game.
 
+Play at https://bouk.pl/tetrahecta/
+
 To start: Enter your and your friends' names and click Start.
 
 Click on a block to pick it up. Mouse wheel or  press Q E to rotate a block.
