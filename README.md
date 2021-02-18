@@ -14,3 +14,5 @@ But it must not touch borders of your blocks.
 The one who scores most points wins.
 
 I'm currently (at the exact moment unless I'm sleeping) working on web based multiplayer. 
+
+![Tetrahecta screenshot](https://github.com/Boukalikrates/tetrahecta/blob/main/Screenshot%20Tetrahecta.png)
