@@ -1,5 +1,23 @@
 @import url(colors.css);
-@import url('https://fonts.googleapis.com/css?family=Itim|Ubuntu:400,300,500,700');
+/* @import url('https://fonts.googleapis.com/css?family=Itim|Ubuntu:400,700'); */
+@keyframes freerot {
+    from {
+        transform: rotate(90deg)
+    }
+    to {
+        transform: rotate(450deg)
+    }
+}
+
+@keyframes loading {
+    from {
+        transform: scaleY(1);
+    }
+    to {
+        transform: scaleY(-1);
+    }
+}
+
 input::-moz-focus-inner, button::-moz-focus-inner {
     border: 0;
     padding: 0
@@ -8,6 +26,7 @@ input::-moz-focus-inner, button::-moz-focus-inner {
 * {
     margin: 0;
     padding: 0;
+    scrollbar-color: gray black;
 }
 
 html {
@@ -18,14 +37,15 @@ html {
 }
 
 .top {
-    width: 800px;
-    height: 400px;
+    width: 4000px;
+    height: 2000px;
     transform-origin: 0% 0%;
+    font-size: 80px;
 }
 
 .top.vert {
-    width: 400px;
-    height: 800px;
+    width: 2000px;
+    height: 4000px;
 }
 
 .top.sqr {
@@ -35,11 +55,11 @@ html {
 
 .elemcontainer {
     float: left;
-    width: 800px;
-    height: 400px;
+    width: 4000px;
+    height: 2000px;
     display: block;
     /* transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); */
-    transition: transform 0.2s;
+    /* transition: transform 0.2s; */
     transform: scale(1);
     transform-origin: 25% 50%;
     z-index: 1;
@@ -47,59 +67,66 @@ html {
 
 .shapcontcontainer {
     float: left;
-    height: 400px;
-    width: 240px;
+    height: 2000px;
+    width: 1200px;
     overflow: hidden;
     z-index: 2;
 }
 
 .vert .shapcontcontainer {
-    height: 240px;
-    width: 400px;
+    height: 1200px;
+    width: 2000px;
+}
+
+.shapelocker{
+    fill: transparent;
+    cursor: not-allowed;
 }
 
 .panel {
-    height: 360px;
-    width: 160px;
-    margin-top: 40px;
+    height: 1800px;
+    width: 800px;
+    margin-top: 200px;
     margin-right: 0px;
     position: absolute;
     overflow: visible;
     text-align: right;
     top: 0px;
-    left: 640px;
+    left: 3200px;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
 }
 
 .vert .panel {
-    width: 360px;
-    height: 160px;
+    width: 1800px;
+    height: 800px;
     margin-top: 0px;
-    margin-right: 40px;
+    margin-right: 200px;
     position: absolute;
-    top: 640px;
+    top: 3200px;
     left: 0px;
 }
 
 h1 {
-    width: 160px;
-    height: 40px;
+    width: 800px;
+    height: 200px;
     position: absolute;
     top: 0px;
-    left: 640px;
+    left: 3200px;
     font-family: 'Itim', 'Ubuntu', sans-serif;
     font-weight: bold;
-    font-size: 30px;
+    font-size: 150px;
     text-align: center;
     cursor: default;
     transition: transform 0.2s;
-    text-shadow: 0 0 5px black;
+    text-shadow: 0 0 25px black;
 }
 
 .vert h1 {
     position: absolute;
-    top: 700px;
-    left: 300px;
+    top: 3500px;
+    left: 1500px;
     transform: rotate(90deg);
 }
 
@@ -113,30 +140,16 @@ h1 {
     text-align: center;
 }
 
-.blockd {
-    display: block;
-    position: absolute;
-}
-
-.block {
-    /*    display: none;*/
-    /*    float: left;*/
-    /*transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);*/
-    transition: transform 0.2s;
-    height: 100%;
-    width: 100%;
-}
-
-.page-0 .ofp-0 .block, .page-1 .ofp-1 .block, .page-2 .ofp-2 .block, .page-3 .ofp-3 .block, .page-4 .ofp-4 .block, .page-5 .ofp-5 .block, .page-6 .ofp-6 .block, .page-7 .ofp-7 .block, .page-8 .ofp-8 .block, .page-9 .ofp-9 .block {
-    display: block;
-}
-
 .te {
     font-weight: bold;
     cursor: default;
 }
 
-.nicelink:hover {
+a {
+    color: #00c0ff;
+}
+
+.link:hover {
     cursor: pointer;
     color: #fff;
     text-decoration: underline;
@@ -160,8 +173,10 @@ h1 {
     background: none;
     cursor: default;
     opacity: 0.5;
-    clear: both;
-    text-align: center;
+}
+
+.server .singleonly, .single .serveronly {
+    display: none;
 }
 
 p, ul {
@@ -176,38 +191,47 @@ label {
 }
 
 .ngsts {
-    width: 24px;
-    padding: 3px;
-    flex-grow: 0;
+    width: 120px;
+    padding: 25px;
+    flex: 0 0 120px;
+    margin-left: 30px;
 }
 
-.ngbtn {
-    width: auto;
-    margin-right: 6px;
-    flex-grow: 1;
-}
-
-.lilflex {
-    display: flex;
+.ngsts>i {
+    display: block;
+    transition: transform 200ms;
+    font-size: 70px;
 }
 
 button, input, select, hr {
     font-size: 1em;
-    margin-bottom: 6px;
     box-sizing: border-box;
     font-family: 'Ubuntu', sans-serif;
     width: 100%;
-    padding: 3px;
+    padding: 10px;
+    min-height: 120px;
     display: block;
     border: none;
     line-height: 1.2;
     border: 0px solid red;
+    margin-bottom: 30px;
+}
+
+option {
+    font-size: 1rem;
 }
 
 button, hr {
     background-color: #444;
     color: #eee;
     text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+hr {
+    min-height: 10px;
+    height: 10px;
 }
 
 button:hover {
@@ -233,19 +257,19 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"]+label {
-    margin-bottom: 6px;
+    margin-bottom: 30px;
 }
 
 input[type="checkbox"]+label::before {
     background-color: #eee;
     content: " ";
-    height: 9px;
-    width: 9px;
-    border: 3px solid #eee;
+    height: 45px;
+    width: 45px;
+    border: 15px solid #eee;
     display: block;
     text-align: left;
     float: left;
-    margin: 2px;
+    margin: 10px;
     border-radius: 30%;
 }
 
@@ -260,7 +284,7 @@ input[type="checkbox"]:checked+label::before {
 
 input[type="checkbox"]:disabled+label::before {
     background-color: gray;
-    border: 3px solid gray;
+    border: 15px solid gray;
 }
 
 input[type="checkbox"]:disabled+label {
@@ -269,11 +293,11 @@ input[type="checkbox"]:disabled+label {
 
 input[type="checkbox"]:disabled:checked+label::before {
     background-color: #111;
-    border: 3px solid gray;
+    border: 15px solid gray;
 }
 
 input[type="checkbox"]+label:hover::before {
-    border: 3px solid gray;
+    border: 15px solid gray;
 }
 
 .meinfo {
@@ -282,14 +306,14 @@ input[type="checkbox"]+label:hover::before {
 
 .meter-outer {
     background-color: #000;
-    height: 21px;
+    height: 105px;
     width: 100%;
-    max-width: 240px;
+    max-width: 1200px;
     font-size: 1em;
     border: none;
     color: #fff;
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 30px;
     text-align: center;
     position: relative;
     float: left;
@@ -297,7 +321,7 @@ input[type="checkbox"]+label:hover::before {
 
 .meter-inner {
     background-color: #eee;
-    height: 21px;
+    height: 105px;
     width: 0%;
     transition: width 1000ms linear;
 }
@@ -310,33 +334,29 @@ input[type="checkbox"]+label:hover::before {
 
 .brandnewoverlays {
     position: absolute;
-    width: 800px;
-    /* height: 400px; */
-    /*display: none;*/
+    width: 4000px;
     overflow: hidden;
     z-index: 100;
 }
 
 .overlaytab {
-    border: 4px solid #eee;
-    width: 740px;
-    height: 340px;
+    border: 20px solid #eee;
+    width: 3700px;
+    height: 1700px;
     display: none;
-    margin: 16px;
-    padding: 10px;
-    /* border-radius: 20px  ; */
-    /*animation: freerot 4s linear infinite;*/
+    margin: 80px;
+    padding: 50px;
     background-color: rgba(0, 0, 0, 0.9);
     background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.95));
-    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 50px 25px rgba(0, 0, 0, 0.75);
     overflow: hidden;
     z-index: 110;
     flex-direction: column;
 }
 
 .vert .overlaytab {
-    width: 340px;
-    height: 740px;
+    width: 1700px;
+    height: 3700px;
 }
 
 .flex {
@@ -348,27 +368,64 @@ input[type="checkbox"]+label:hover::before {
     height: 0;
 }
 
-.vert .flex {
-    display: initial;
+.verticalflex {
+    flex: 1 0 0;
+    display: flex;
+    flex-direction: column;
 }
 
+.lilflex {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+/* .vert .flex {
+    display: initial;
+} */
+
 .overlaytab h2 {
-    margin: 0 10px 5px;
+    margin: 0 50px 25px;
     cursor: default;
     font-size: 1.3em;
     text-align: center;
 }
 
 .overlaytab h3 {
-    margin: 0 10px 5px;
+    margin: 0 50px 25px;
     cursor: default;
     font-size: 1em;
 }
 
-.third {
+.flexcolumn {
     width: auto;
-    flex: 1 1 100px;
-    padding: 0 10px;
+    flex: 1 0 0px;
+    padding: 0 50px;
+    overflow: auto;
+}
+
+.flexcolumn.doublesize {
+    flex: 2 0 0px;
+}
+
+.flexcolumn.reducable {
+    transition: flex 0.6s, margin 0.6s, padding 0.6s, opacity 0.3s 0.3s;
+}
+
+.server .flexcolumn.reduced {
+    flex: 0 1 0;
+    overflow: hidden;
+    padding: 0;
+    opacity: 0;
+    transition: flex 0.6s, margin 0.6s, padding 0.6s, opacity 0.3s;
+}
+
+.server label.reduced {
+    height: 0;
+    overflow: hidden;
+}
+
+.serverlist {
     overflow: auto;
 }
 
@@ -388,9 +445,19 @@ input[type="checkbox"]+label:hover::before {
     cursor: pointer;
 }
 
+.roomentry {
+    padding: 20px;
+    border-bottom: 10px solid #444;
+    cursor: default;
+}
+
+.roomentry:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
 .great, .is {
     text-align: center;
-    margin: 3px;
+    margin: 15px;
 }
 
 .winner {
@@ -398,7 +465,7 @@ input[type="checkbox"]+label:hover::before {
     font-size: 2em;
     font-weight: bold;
     font-family: 'Itim', 'Ubuntu', sans-serif;
-    margin: 0 3px;
+    margin: 0 15px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -423,20 +490,15 @@ input[type="checkbox"]+label:hover::before {
     margin: auto;
 }
 
-@keyframes freerot {
-    from {
-        transform: rotate(90deg)
-    }
-    to {
-        transform: rotate(450deg)
-    }
+.loading {
+    animation: loading 1s ease-in-out infinite alternate;
 }
 
 .olderp {
     font-size: 1em;
     float: right;
     table-layout: fixed;
-    width: 160px;
+    width: 800px;
 }
 
 .olderp th, .olderp td {
@@ -445,13 +507,13 @@ input[type="checkbox"]+label:hover::before {
 }
 
 .olderp td {
-    width: 30px;
+    width: 150px;
 }
 
 .gonetable {
     width: auto;
-    margin: 5px 10px;
-    border: 2px solid gray;
+    margin: 25px 50px;
+    border: 10px solid gray;
     border-spacing: 0;
     white-space: pre-line;
     border-collapse: collapse;
@@ -459,13 +521,13 @@ input[type="checkbox"]+label:hover::before {
 }
 
 .gonetable th, .gonetable td {
-    margin: 1px;
-    padding: 3px;
-    border: 2px solid gray;
+    margin: 5px;
+    padding: 15px;
+    border: 10px solid gray;
     text-align: center;
     background-color: black;
 }
 
 .gonetable td {
-    width: 20px;
+    width: 100px;
 }

@@ -1,0 +1,26 @@
+{
+  "name": "tetrahecta",
+  "dependencies": {
+    "mime": "^2.4.7",
+    "sha3": "^2.1.3"
+  },
+  "version": "1.0.0",
+  "main": "Tetranode.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Boukalikrates/tetrahecta.git"
+  },
+  "author": "Boukalikrates",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Boukalikrates/tetrahecta/issues"
+  },
+  "homepage": "https://github.com/Boukalikrates/tetrahecta#readme",
+  "description": ""
+}

@@ -1,6 +1,6 @@
 class SVGLayout {
     constructor(elem) {
-        this.elem = elem.find('svg').first().attr('viewBox', '0 0 800 400'); //.attr('width', 800).attr('height', 400);
+        this.elem = elem.find('svg').first().attr('viewBox', '0 0 4000 2000'); 
         this.elem.html('\
             <defs>\
                 <filter id="dilate">\
@@ -9,13 +9,14 @@ class SVGLayout {
             </defs>\
             <g class="mainboard"></g>\
             <g class="shapecontainer"></g>\
-            <g class="shapepageindicator"></g>');
+            <g class="shapepageindicator"></g>\
+            <rect class="shapelocker" x="2000" y="0" width="1200" height="2000"/>');
 
         this.mb = this.elem.find('.mainboard');
         this.sc = this.elem.find('.shapecontainer');
         this.spi = this.elem.find('.shapepageindicator');
+        this.sl = this.elem.find('.shapelocker');
 
-        this.page = 1;
         this.duration = 200;
 
         this.sphere = 45;
@@ -42,7 +43,7 @@ class SVGLayout {
         this.availables = [];
         this.positions = {};
         this.boardsize = game.rule.boardsize;
-        this.tilesize = 400 / this.boardsize;
+        this.tilesize = 2000 / this.boardsize;
         this.px = this.tilesize / 20;
         this.page = 0;
         this.pages = game.rule.pages;
@@ -68,7 +69,9 @@ class SVGLayout {
         return str;
     }
 
-
+    lockblocks(lock){
+        this.sl.css('display',lock?'block':'none');
+    }
 
 
     //PAINTING
@@ -124,7 +127,7 @@ class SVGLayout {
     }
     makeblock(f, n, colour) {
         this.positions[f.id] = {
-            x: f.pb.x * this.tilesize + 400,
+            x: f.pb.x * this.tilesize + 2000,
             y: f.pb.y * this.tilesize,
             cx: f.pd.x * this.tilesize / 2,
             cy: f.pd.y * this.tilesize / 2,
@@ -132,13 +135,14 @@ class SVGLayout {
         };
 
         //result = '<g class="block" data-blockid="' + f.id + '"><g class="subblock" transform="scale(1,1) translate(0,0) rotate(0,' + this.positions[f.id].cx + ',' + this.positions[f.id].cy + ')">';
-        let result = this.format('<g class="block" data-blockid="{0}" data-available="{3}"><g class="subblock" transform="scale(1,1) rotate(0) translate({1},{2})">',
-            [f.id, -this.positions[f.id].cx, -this.positions[f.id].cy]);
+        let result = this.format('<g class="block" data-blockid="{0}"><title>{0}({3},{4})</title><g class="subblock" transform="scale(1,1) rotate(0) translate({1},{2})">',
+            [f.id, -this.positions[f.id].cx, -this.positions[f.id].cy,f.pb.x,f.pb.y]);
 
         for (let i = 0; i < f.ps; i++) {
             result += this.makeelem(n, f.pc[i].x, f.pc[i].y, colour);
         }
-        result += this.format('</g><circle class="blocksphere" r="{0}"></g>', [this.sphere]);
+        // result += this.format('</g><circle class="blocksphere" r="{0}"/></g>', [this.sphere]);
+        result += this.format('</g></g>', [this.sphere]);
         return result;
     }
 
@@ -166,14 +170,14 @@ class SVGLayout {
         for (let i = 0; i < pages; i++) {
             result += this.format('<circle r="{r}" class="ps0 pk10" cx="{cx}" cy="{cy}" />', {
                 r: this.tilesize / 4,
-                cx: 400 + this.tilesize / 2,
-                cy: 200 + this.tilesize * (-i + pages / 2 - 0.5)
+                cx: 2000 + this.tilesize / 2,
+                cy: 1000 + this.tilesize * (-i + pages / 2 - 0.5)
             });
         }
         result += this.format('<circle r="{r}" style="fill:{c};stroke:{c}" class="pk5 spicircle" cx="{cx}" cy="{cy}" transform="translate(0,0)"/>', {
             r: this.tilesize / 4,
-            cx: 400 + this.tilesize / 2,
-            cy: 200 + this.tilesize * (-pages / 2 + 0.5),
+            cx: 2000 + this.tilesize / 2,
+            cy: 1000 + this.tilesize * (-pages / 2 + 0.5),
             c: colour
         });
         return result;
@@ -208,7 +212,6 @@ class SVGLayout {
     }
 
     raiseBlock(id = this.hover) {
-        if (1) { }
         this.active = id;
         this.updateSubBlock();
         this.findBlock(id).addClass('active');
@@ -234,7 +237,8 @@ class SVGLayout {
         this.findBlock(this.hover).addClass('hover');
     }
 
-    changePage(p, force = false) {
+    changePage(p=0, force = false) {
+        p=Math.floor(p);
         if (p < 0) p = 0
         else if (p >= this.pages) p = this.pages - 1;
 
@@ -266,12 +270,22 @@ class SVGLayout {
         });
     }
     updateBlock(instant = false) {
-        this.findBlock(this.active).animate({
+        if(instant){
+            this.findBlock(this.active).animate({
             svgTransform: 'translate(' + this.translationX + ' ' + this.translationY + ')'
         }, {
-            duration: instant ? 0 : this.duration,
+            duration:  0,
             queue: false
         });
+        }else{
+            this.findBlock(this.active).animate({
+            svgTransform: 'translate(' + this.translationX + ' ' + this.translationY + ')'
+        }, {
+            duration:  this.duration,
+            queue: false
+        });
+        }
+        
     }
     updateSubBlock() {
         /* this piece of code is for those we hate the most 😜
@@ -295,7 +309,7 @@ class SVGLayout {
          */
 
         this.findBlock(this.active).find('.subblock').animate({
-            svgTransform: this.format('scale(1,{0}) rotate({1}) translate({2},{3})', [this.scale, this.rotation, -this.pa.cx, -this.pa.cy])
+            svgTransform: this.format('scale(1,{0}) rotate({1}) translate({2},{3})', [this.scale, this.rotation, -this.positions[this.active].cx, -this.positions[this.active].cy])
             //svgTransform: 'matrix({0} {1} {2} {3} {4} {5})'.format(a,b,c,d,e,f)
         }, {
             duration: this.duration,
