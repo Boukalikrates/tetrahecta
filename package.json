@@ -10,7 +10,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "start": "node .",
+    "start": "node Tetranode.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
