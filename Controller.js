@@ -510,7 +510,7 @@ class Controller {
                     //     $("#elemcontainer").css("transform", "rotate(" + (board) + "deg)");
                     // }
                 } else if (e.pageX < this.base * 1.6) {
-                    let nextpage = (e.deltaY > 0 ? 1 : e.deltaY < 0 ? -1 : 0) + this.layout.page;
+                    let nextpage = (e.deltaY > 0 ? -1 : e.deltaY < 0 ? 1 : 0) + this.layout.page;
                     this.layout.changePage(nextpage);
                 }
 
