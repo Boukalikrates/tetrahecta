@@ -14,7 +14,7 @@ const options = {
     cert: fs.readFileSync('cert.pem')
   };
 
-var port = 8069
+var port = 443
 
 var roomcap = 100;
 
