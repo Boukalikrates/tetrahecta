@@ -201,7 +201,7 @@ http.createServer(function (req, res) {
                 return res.end("404 Not Found");
             }
             if (q.pathname == "/") {
-                data = data.toString().replace('var serverEnabled = false;', 'var serverEnabled = true;')
+                data = data.toString().replace('const serverEnabled = false;', 'const serverEnabled = true;')
             }
             res.writeHead(200, { 'Content-Type': mime.getType(fileextension) });
             res.write(data);

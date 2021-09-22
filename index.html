@@ -22,7 +22,7 @@
     <script src="Game.js"></script>
     <script src="Controller.js"></script>
     <script>
-        var serverEnabled = false;
+        const serverEnabled = false;
         const tetrahectaversion = "Tetrahecta 2021-06-devel-veryunstable";
         const classicnames = ["Astraea", "Nasdragul", "Jinzetsu", "Ontrin"];
         var guru;
@@ -81,11 +81,7 @@
                         <p class="singleonly ">This Tetrahecta instance does not support online multiplayer. Only local
                             multi is available. <a href="https://tetrahecta.bouk.pl/">Click here</a> to find online
                             servers.</p>
-                        <label class="serveronly reducable reduced inroom">&nbsp;</label>
-                        <label class="serveronly reducable reduced inroom">
-                            <button class="serveronly leaveroom">Leave room</button>
-                        </label>
-                        <label class="serveronly reducable outroom">
+                        <label class="serveronly">
                             Your name
                             <input class="multiplayername te t red"
                                 pattern="[\u0410-\u042F\u0430-\u044FA-Za-z0-9 _.,!+]{3,30}">
@@ -115,6 +111,10 @@
 
                         <div class="verticalflex">
                             <div class="serveronly">
+
+                                <label class="">
+                                    <button class="serveronly leaveroom">Leave room</button>
+                                </label>
                                 <label>
                                     Room name
                                     <input class="roomname roomsettings"

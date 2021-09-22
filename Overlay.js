@@ -187,31 +187,39 @@ class Overlay {
 
 
             let plist = this.elem.find('.playerlist');
-            if(plist.children('.you').length==0){
-                plist.append('<label class="you">Player <span class="te memberindex">0</span> (you)<span class="host"></span><input class="tin te premultiplayername multiplayername"></label>')
-            }
+            // if(plist.children('.you').length==0){
+            //     plist.append('<label class="you">Player <span class="te memberindex">0</span> (you)<span class="host"></span><input class="tin te "></label>')
+            // }
 
-            let you=plist.children('.you');
-            let youinput=you.find('input');
-            if(!youinput.hasClass('multiplayername')){
-                youinput.val(d.slotlist[memberindex]).addClass('multiplayername');
-            }
-            you.find('.memberindex').text(memberindex+1);
-            you.find('.host').text(memberindex==0?' (host)':'');
+            // let you=plist.children('.you');
+            // let youinput=you.find('input');
+            // // if(!youinput.hasClass('multiplayername')){
+            // //     youinput.val(d.slotlist[memberindex]).addClass('multiplayername');
+            // // }
+            // you.find('.memberindex').text(memberindex+1);
+            // you.find('.host').text(memberindex==0?' (host)':'');
 
 
             plist.children('.notyou').remove();
-            for (let i = memberindex-1; i >=0; i--) {
+            // for (let i = memberindex-1; i >=0; i--) {
+            //     let name=d.slotlist[i];
+            //     if (typeof name == 'undefined') name='';
+            //     let host=i==0?' (host)':'';
+            //     plist.prepend('<label class="notyou">Player <span class="te">' + (i + 1) + '</span>'+host+'<input class="tin te" disabled value="'+name+'"></label>')
+            // }
+            // for (let i = memberindex+1; i < d.capacity; i++) {
+            //     let name=d.slotlist[i];
+            //     if (typeof name == 'undefined') name='';
+            //     let host=i==0?' (host)':'';
+            //     plist.append('<label class="notyou">Player <span class="te">' + (i + 1) + '</span>'+host+'<input class="tin te" disabled value="'+name+'"></label>')
+            // }
+            for (let i = 0; i < d.capacity; i++) {
                 let name=d.slotlist[i];
                 if (typeof name == 'undefined') name='';
                 let host=i==0?' (host)':'';
-                plist.prepend('<label class="notyou">Player <span class="te">' + (i + 1) + '</span>'+host+'<input class="tin te" disabled value="'+name+'"></label>')
-            }
-            for (let i = memberindex+1; i < d.capacity; i++) {
-                let name=d.slotlist[i];
-                if (typeof name == 'undefined') name='';
-                let host=i==0?' (host)':'';
-                plist.append('<label class="notyou">Player <span class="te">' + (i + 1) + '</span>'+host+'<input class="tin te" disabled value="'+name+'"></label>')
+                let you=i==memberindex?' (you)':'';
+                let kick=memberindex==0?' (kick)':'';
+                plist.append('<label class="notyou">Player <span class="te">' + (i + 1) + '</span>'+host+you+kick+'<input class="tin te" disabled value="'+name+'"></label>')
             }
             for (let i = 0; i < d.capacity; i++) {
                 plist.children().eq(i).find('.te').css('color', 'hsl( ' + (360 * i / d.capacity + 225) + ' ,100%,50%)');

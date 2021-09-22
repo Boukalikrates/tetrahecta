@@ -203,7 +203,7 @@ class Controller {
     }
     getmultiplayername() {
         let name = $('.multiplayername').last().val()
-        $('.multiplayername').val(name)
+        // $('.multiplayername').val(name)
         return name ? name : 'Guest';
     }
     ///// API /////
