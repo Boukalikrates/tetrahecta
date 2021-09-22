@@ -9,6 +9,11 @@ const SHA3 = require('sha3');
 const Room = require('./Room.js');
 const Identity = require('./Identity.js');
 
+const options = {
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem')
+  };
+
 var port = 8069
 
 var roomcap = 100;
@@ -133,7 +138,8 @@ function setblock(identity, props) {
     else return JSON.stringify({ 'error': 'Could not move' });
 }
 
-http.createServer(function (req, res) {
+https.createServer(options, function (req, res) {
+
     let q = url.parse(req.url, true);
     if (req.method == 'POST') {
         var body = '';

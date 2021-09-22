@@ -1,3 +1,5 @@
 
 tetrahecta.code-workspace
 .vscode/*
+cert.pem
+key.pem
