@@ -312,7 +312,7 @@ class Controller {
             if (this.current.gone && !data.data.game.gone) {
                 this.overlay.close();
             }
-            if (this.current.id > data.data.game.id) {
+            if (this.current.id != data.data.game.id) {
                 this.current.unclone(data.data.game);
                 this.layout.lockblocks(this.memberindex!=data.data.game.player);
                 this.overlay.tick(this.memberindex==data.data.game.player)

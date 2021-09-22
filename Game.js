@@ -7,6 +7,7 @@
         constructor(layout, overlay) {
             this.layout = layout;
             this.overlay = overlay;
+            this.id = Math.floor(Math.random() * 17041395);
 
             //        if (g) {
             //            var gamob = (typeof (g) == "string") ? JSON.parse(g) : g;
@@ -20,12 +21,12 @@
 
         newgame(timeless, names, gamerule) {
 
+            this.id+=10;
             this.board = [];
             this.tempboard = [];
             this.timeless = timeless;
             this.player = -1;
             this.time = 69;
-            this.id = Math.floor(Math.random() * 17041395);
             this.rule = gamerule;
             this.players = this.rule.starts.length;
             this.gone = this.players == 0;
