@@ -16,6 +16,8 @@ class Controller {
         this.getroomstimeout = 0;
         this.enterroomtimeout = 0;
 
+        this.turnsent=false;
+
         this.memberindex=0;
         // this.element.find(".ten").each(function () {
         //     $(this).mouseover(function () {
@@ -293,6 +295,7 @@ class Controller {
     }
 
     apisetblock(props) {
+        this.turnsent=true;
         $.ajax({
             type: "POST",
             url: '/setblock',
@@ -301,28 +304,35 @@ class Controller {
                 name: this.getmultiplayername(),
                 props: JSON.stringify(props)
             },
-            success: this.enterroomcallback.bind(this)
+            success: this.apisetblockcallback.bind(this)
         });
     }
 
+    apisetblockcallback(data){
+        this.turnsent=false;
+        this.enterroomcallback(data);
+    }
+
     enterroomcallback(data) {
-        if (data.data) {
-            window.location.hash = '#room' + data.data.id;
-            this.memberindex=data.data.memberindex; 
-            if (this.current.gone && !data.data.game.gone) {
-                this.overlay.close();
+        if(!this.turnsent){
+            if (data.data) {
+                window.location.hash = '#room' + data.data.id;
+                this.memberindex=data.data.memberindex; 
+                if (this.current.gone && !data.data.game.gone) {
+                    this.overlay.close();
+                }
+                if (this.current.id != data.data.game.id) {
+                    this.current.unclone(data.data.game);
+                    this.layout.lockblocks(this.memberindex!=data.data.game.player);
+                    this.overlay.tick(this.memberindex==data.data.game.player)
+                }
+            } else {
+                window.location.hash = '';
             }
-            if (this.current.id != data.data.game.id) {
-                this.current.unclone(data.data.game);
-                this.layout.lockblocks(this.memberindex!=data.data.game.player);
-                this.overlay.tick(this.memberindex==data.data.game.player)
-            }
-        } else {
-            window.location.hash = '';
+            this.overlay.enterroom(data);
+            clearTimeout(this.enterroomtimeout);
+            this.enterroomtimeout = setTimeout(this.enterroom.bind(this), 1000);
         }
-        this.overlay.enterroom(data);
-        clearTimeout(this.enterroomtimeout);
-        this.enterroomtimeout = setTimeout(this.enterroom.bind(this), 1000);
     }
 
     ///// EVENTS /////
