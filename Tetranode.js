@@ -9,10 +9,10 @@ const SHA3 = require('sha3');
 const Room = require('./Room.js');
 const Identity = require('./Identity.js');
 
-const options = {
-    key: fs.readFileSync('key.pem'),
-    cert: fs.readFileSync('cert.pem')
-  };
+// const options = {
+//     key: fs.readFileSync('key.pem'),
+//     cert: fs.readFileSync('cert.pem')
+//   };
 
 var port = 80
 
