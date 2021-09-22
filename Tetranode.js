@@ -14,7 +14,7 @@ const Identity = require('./Identity.js');
 //     cert: fs.readFileSync('cert.pem')
 //   };
 
-var port = 80
+const port = 8069;
 
 var roomcap = 100;
 
