@@ -14,7 +14,7 @@ const options = {
     cert: fs.readFileSync('cert.pem')
   };
 
-var port = 443
+var port = 80
 
 var roomcap = 100;
 
@@ -138,7 +138,8 @@ function setblock(identity, props) {
     else return JSON.stringify({ 'error': 'Could not move' });
 }
 
-https.createServer(options, function (req, res) {
+// https.createServer(options, function (req, res) {
+http.createServer( function (req, res) {
 
     let q = url.parse(req.url, true);
     if (req.method == 'POST') {
