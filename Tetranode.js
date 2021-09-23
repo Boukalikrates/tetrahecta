@@ -135,7 +135,7 @@ function setblock(identity, props) {
     let block = guy.game.rule[props.block];
     let success = guy.setblock(block, props.x, props.y, props.swap, props.rx, props.ry, true);
     if (success) return JSON.stringify({ 'data': room.clone(identity) })
-    else return JSON.stringify({ 'error': 'Could not move' });
+    else return JSON.stringify({ 'error': 'Could not move'+guy.doublecheck() });
 }
 
 // https.createServer(options, function (req, res) {

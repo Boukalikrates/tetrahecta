@@ -309,7 +309,9 @@
         }
 
 
-
+        doublecheck(){
+            return this.game.turnid+=2;
+        }
 
 
 

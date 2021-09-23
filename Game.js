@@ -7,7 +7,6 @@
         constructor(layout, overlay) {
             this.layout = layout;
             this.overlay = overlay;
-            this.id = Math.floor(Math.random() * 17041395);
 
             //        if (g) {
             //            var gamob = (typeof (g) == "string") ? JSON.parse(g) : g;
@@ -21,7 +20,8 @@
 
         newgame(timeless, names, gamerule) {
 
-            this.id+=10;
+            this.turnid=0;
+            this.id = Math.floor(Math.random() * 17041395);
             this.board = [];
             this.tempboard = [];
             this.timeless = timeless;
@@ -119,7 +119,7 @@
                     this.overlay.alert('Nobody to play!');
                     return this.overlay.open();
                 }
-                this.id++;
+                this.turnid++;
 
 
 
@@ -216,6 +216,7 @@
                 timeless: this.timeless,
                 player: this.player,
                 time: this.time,
+                turnid: this.turnid,
                 id: this.id,
                 guys: tempguys
             }
@@ -227,6 +228,7 @@
             for (let i = 0; i < obj.guys.length; i++) {
                 tempguys.push(new Guy(obj.guys[i], i, this));
             }
+            this.turnid = obj.turnid;
             this.id = obj.id;
             this.board = obj.board;
             this.gone = obj.gone;
