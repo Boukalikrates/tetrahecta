@@ -16,7 +16,7 @@ const Identity = require('./Identity.js');
 
 const port = process.env.PORT || 8069;
 
-var roomcap = 100;
+var roomcap = 25;
 
 var rooms = {};
 var identities = {};
@@ -35,7 +35,7 @@ if(process.argv){
 
 function removeempty() {
     for (let i in identities) {
-        if (Date.now() - identities[i].lastseen > 60000) {
+        if (Date.now() - identities[i].lastseen > 30000) {
             identities[i].leaveroom();
             delete identities[i];
         }
@@ -57,7 +57,7 @@ function checkidentity(idstring, name = '') {
     hash.update(str);
     let hashstr = hash.digest('hex');
     if (!identities[hashstr]) {
-        let newIdentity = new Identity(idstring, name);
+        let newIdentity = new Identity(hashstr, name);
         return identities[hashstr] = newIdentity;
     } else {
         identities[hashstr].changename(name);
@@ -75,8 +75,8 @@ function getrooms() {
     return JSON.stringify({ data: result });
 }
 function createroom(identity) {
-    if (rooms.length >= roomcap) {
-        return JSON.stringify({ 'error': 'There are too many room on this server' })
+    if (Object.keys(rooms).length >= roomcap) {
+        return JSON.stringify({ 'error': 'There are too many rooms on this server' })
     }
     let roomid = roomindex++;
     let newRoom = new Room(roomid, identity);
@@ -115,11 +115,24 @@ function changeprops(identity, props) {
 
 }
 
+function kick(identity,hashstr) {
+    let room = identity.room;
+    let player=identities[hashstr];
+    if (!room) return JSON.stringify({ 'error': 'This room does not exist' });
+    if (!player) return JSON.stringify({ 'error': 'This player ('+hashstr+') does not exist' });
+    if (!room.host(identity)) return JSON.stringify({ 'error': 'Not permitted to change props' });
+    if (!room.member(player)) return JSON.stringify({ 'error': 'This player is not in this room' });
+    let success = room.kick(identity, player);
+    if (success) return JSON.stringify({ 'data': room.clone(identity) })
+    else return JSON.stringify({ 'error': 'Could not kick player' });
+    
+}
+
 function startgame(identity) {
     let room = identity.room;
     if (!room) return JSON.stringify({ 'error': 'This room does not exist' });
     if (!room.host(identity)) return JSON.stringify({ 'error': 'Not permitted to start game' });
-    if (room.notfull()) return JSON.stringify({ 'error': 'Not enough players' });
+    if (room.notenoughplayers()) return JSON.stringify({ 'error': 'Not enough players' });
     let success = room.startgame(identity);
     if (success) return JSON.stringify({ 'data': room.clone(identity) })
     else return JSON.stringify({ 'error': 'Could not start game' });
@@ -178,6 +191,10 @@ http.createServer( function (req, res) {
 
                 case "/changeprops":
                     response = changeprops(identity, POST['props']);
+                    break;
+
+                case "/kick":
+                    response = kick(identity, POST['hashstr']);
                     break;
                 case "/startgame":
                     response = startgame(identity);

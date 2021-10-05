@@ -64,7 +64,6 @@ html {
     transform-origin: 25% 50%;
     z-index: 1;
 }
-
 .shapcontcontainer {
     float: left;
     height: 2000px;
@@ -81,6 +80,19 @@ html {
 .shapelocker{
     fill: transparent;
     cursor: not-allowed;
+}
+
+.unlockedblocks .shapelocker, 
+.hiddenboard .shapelocker,
+.hiddenboard .mainboard, 
+.hiddenboard .shapecontainer, 
+.hiddenboard .shapepageindicator, 
+.backdrop{
+    display: none;
+}
+
+.hiddenboard .backdrop{
+    display: block;
 }
 
 .panel {
@@ -397,6 +409,10 @@ input[type="checkbox"]+label:hover::before {
     font-size: 1em;
 }
 
+.overlaytab ul, .overlaytab li{
+    list-style-position: inside;
+}
+
 .flexcolumn {
     width: auto;
     flex: 1 0 0px;
@@ -405,7 +421,7 @@ input[type="checkbox"]+label:hover::before {
 }
 
 .flexcolumn.doublesize {
-    flex: 2 0 0px;
+    flex: 2 0 100px;
 }
 
 .flexcolumn.reducable {
@@ -428,6 +444,10 @@ input[type="checkbox"]+label:hover::before {
 .serverlist {
     overflow: auto;
 }
+.kickbutton{
+    cursor: pointer;
+}
+
 
 .backoverlay {
     float: left;
@@ -488,6 +508,7 @@ input[type="checkbox"]+label:hover::before {
     width: 80%;
     text-align: left;
     margin: auto;
+    list-style-position: outside;
 }
 
 .loading {

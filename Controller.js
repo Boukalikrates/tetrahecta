@@ -18,6 +18,7 @@ class Controller {
 
 
         this.memberindex=0;
+        this.playerindex=0;
         // this.element.find(".ten").each(function () {
         //     $(this).mouseover(function () {
         //         this.element.find(".elemcontainer").addClass("so" + $(this).attr(D + "n"))
@@ -38,10 +39,8 @@ class Controller {
         $(".serverlist").click(this.clickroom.bind(this));
         $(".leaveroom").click(this.leaveroom.bind(this));
         $(".roomsettings").change(this.changeprops.bind(this));
-        $('<i class="fas fa-sm fa-arrow-left backoverlay"></i>').click(this.overlay.back.bind(this.overlay)).appendTo('.overlaytab h2');
-        $('<i class="fas fa-sm fa-times closeoverlay" aria-hidden="true"></i>').click(this.overlay.back.bind(this.overlay)).appendTo('.overlaytab h2');
-        $("::before");
-        $(".overlaytab h2::after").click(this.overlay.close.bind(this.overlay));
+        $('<i class="fas fa-sm fa-arrow-left backoverlay" aria-hidden="true"></i>').click(this.overlay.back.bind(this.overlay)).appendTo('.overlaytab h2');
+        $('<i class="fas fa-sm fa-times closeoverlay" aria-hidden="true"></i>').click(this.overlay.close.bind(this.overlay)).appendTo('.overlaytab h2');
 
         $('.nicelink').each(function (_index, elem) {
             let opens = $(elem).attr('data-opens');
@@ -164,7 +163,7 @@ class Controller {
             if(moved){
                 this.overlay.tick(0);
                 if(this.server){
-                    this.layout.lockblocks(this.memberindex!=this.current.player)
+                    this.layout.lockblocks(this.playerindex!=this.current.player)
                     this.apisetblock({
                         block: acti.id,
                         x: xd,
@@ -280,6 +279,18 @@ class Controller {
             success: this.enterroomcallback.bind(this)
         });
     }
+    kick(hashstr) {
+        $.ajax({
+            type: "POST",
+            url: '/kick',
+            data: {
+                identity: $('.identity').val(),
+                name: this.getmultiplayername(),
+                hashstr: hashstr
+            },
+            success: this.enterroomcallback.bind(this)
+        });
+    }
 
     startgame() {
         $.ajax({
@@ -310,18 +321,20 @@ class Controller {
             if (data.data) {
                 window.location.hash = '#room' + data.data.id;
                 this.memberindex=data.data.memberindex; 
+                this.playerindex=data.data.playerindex; 
                 if (this.current.gone && !data.data.game.gone) {
                     this.overlay.close();
                 }
                 if (this.current.id != data.data.game.id || this.current.turnid < data.data.game.turnid) {
                     this.current.unclone(data.data.game);
-                    this.layout.lockblocks(this.memberindex!=data.data.game.player);
-                    this.overlay.tick(this.memberindex==data.data.game.player)
+                    this.layout.lockblocks(this.playerindex!=data.data.game.player);
+                    this.overlay.tick(this.playerindex==data.data.game.player)
                 }
             } else {
                 window.location.hash = '';
             }
             this.overlay.enterroom(data);
+            $('.kickbutton').click(this.kickbutton.bind(this));
             clearTimeout(this.enterroomtimeout);
             this.enterroomtimeout = setTimeout(this.enterroom.bind(this), 1000);
         
@@ -412,7 +425,7 @@ class Controller {
                         // prompt('Copy this string to txt or send it via email. Don\'t try to modify this unless you want to lose your game! (and friends!!!1)', savegame());
                         break;
                     case 't':
-                        this.current.guy().cputurn();
+                        this.current.guy().cputurn(true);
                         break;
                     case 'F2':
                         this.save();
@@ -469,7 +482,7 @@ class Controller {
                         if (dest >= 0 && dest < pa)
                             this.layout.changePage(dest);
                     } else
-                        if (px >= 1 && s * 0.6 > px && py >= 0 && s > py && (!this.server||this.memberindex==this.current.player)) {
+                        if (px >= 1 && s * 0.6 > px && py >= 0 && s > py && (!this.server||this.playerindex==this.current.player)) {
                             let demand = this.current.guy().pickblock(px, py);
                             if (!this.current.gone && this.current.guy().hasblock(demand)) {
                                 let px = e.pageX / this.base * 2000;
@@ -510,5 +523,10 @@ class Controller {
                 this.layout.rotateBlock(e.deltaY > 0 ? 1 : e.deltaY < 0 ? -1 : 0);
             }
         }
+    }
+    kickbutton(e){
+        let target=$(e.target)
+        if(confirm('Do you really want to kick '+target.attr('data-name')+'?'))
+        this.kick( target.attr('data-hashstr'));
     }
 }

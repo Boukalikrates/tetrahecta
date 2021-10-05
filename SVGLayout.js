@@ -10,12 +10,14 @@ class SVGLayout {
             <g class="mainboard"></g>\
             <g class="shapecontainer"></g>\
             <g class="shapepageindicator"></g>\
+            <image class="backdrop" href="backdrop.png"/>\
             <rect class="shapelocker" x="2000" y="0" width="1200" height="2000"/>');
 
         this.mb = this.elem.find('.mainboard');
         this.sc = this.elem.find('.shapecontainer');
         this.spi = this.elem.find('.shapepageindicator');
         this.sl = this.elem.find('.shapelocker');
+        this.bd = this.elem.find('.backdrop');
 
         this.duration = 200;
 
@@ -40,20 +42,32 @@ class SVGLayout {
 
     }
     setup(game) {
-        this.availables = [];
-        this.positions = {};
-        this.boardsize = game.rule.boardsize;
-        this.tilesize = 2000 / this.boardsize;
-        this.px = this.tilesize / 20;
-        this.page = 0;
-        this.pages = game.rule.pages;
-        this.active = '';
-        this.hover = '';
-        this.translationX = this.boardsize / 2;
-        this.translationY = this.boardsize / 2;
-        this.rotation = 0;
-        this.scale = 1;
-        this.elem.attr('stroke-width', this.px * 2);
+        if(game.rule.boardsize==0){
+            this.elem.addClass('hiddenboard');
+            // this.elem.children().hide();
+            // this.bd.show();
+        }else{
+            this.elem.removeClass('hiddenboard');
+            // this.elem.children().show();
+            // this.bd.hide();
+            this.availables = [];
+            this.positions = {};
+            this.boardsize = game.rule.boardsize;
+            this.tilesize = 2000 / this.boardsize;
+            this.px = this.tilesize / 20;
+            this.pages = game.rule.pages;
+            if(this.page>=this.pages){
+                this.page = 0;
+            }
+            this.active = '';
+            this.hover = '';
+            this.translationX = this.boardsize / 2;
+            this.translationY = this.boardsize / 2;
+            this.rotation = 0;
+            this.scale = 1;
+            this.elem.attr('stroke-width', this.px * 2);
+        }
+        
     }
 
 
@@ -70,7 +84,11 @@ class SVGLayout {
     }
 
     lockblocks(lock){
-        this.sl.css('display',lock?'block':'none');
+        if(lock){
+            this.elem.removeClass('unlockedblocks');
+        }else{
+            this.elem.addClass('unlockedblocks');
+        }
     }
 
 

@@ -23,7 +23,7 @@
     <script src="Controller.js"></script>
     <script>
         const serverEnabled = false;
-        const tetrahectaversion = "Tetrahecta 2021-09-23-devel-veryunstable";
+        const tetrahectaversion = "Tetrahecta 2021-10-05-devel-significantlyunstable";
         const classicnames = ["Astraea", "Nasdragul", "Jinzetsu", "Ontrin"];
         var guru;
         $(document).ready(function () {
@@ -66,7 +66,10 @@
 
 
 
-        <div class="tablecontainer"><svg class="elemcontainer" width="4000" height="2000"></svg></div>
+        <div class="tablecontainer">
+            <svg class="elemcontainer" width="4000" height="2000"></svg>
+            <!-- <img src="backdrop.jpg" alt="backdrop" class="backdrop"> -->
+        </div>
 
 
 
@@ -83,7 +86,7 @@
                             servers.</p>
                         <label class="serveronly">
                             Your name
-                            <input class="multiplayername te t red"
+                            <input class="multiplayername te"
                                 pattern="[\u0410-\u042F\u0430-\u044FA-Za-z0-9 _.,!+]{3,30}">
                         </label>
                         <p class="link nicelink" data-opens="howtoplay">Click here to see how to play.</p>
@@ -106,7 +109,13 @@
                             <div class="centered loading">Loading...</div>
                         </div>
                     </div>
-                    <form class="flexcolumn playerlist ssform reducable reduced inroom" id="ssform"></form>
+                    <form class="playerlist flexcolumn ssform singleonly" id="ssform"></form>
+                    <div class=" flexcolumn ssform serveronly reducable reduced inroom">
+                        <h3>Players:</h3>
+                        <ul class="onlineplayerlist"></ul>
+                        <h3>Spectators:</h3>
+                        <ul class="spectatorlist"></ul>
+                    </div>
                     <div class="flexcolumn verticalflex reducable reduced inroom">
 
                         <div class="verticalflex">

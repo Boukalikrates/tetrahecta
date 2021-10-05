@@ -14,8 +14,7 @@
                     'shadow': '#1a1a1a',
                     'lamcia': 'white',
                     'bordo': 'rgb(183,0,0)',
-                    'me_in_my_crush_eyes': 'transparent',
-                    'razor': '#4A412A'
+                    'me_in_my_crush_eyes': 'transparent'
                 }
                 if (!a) a = 'Player ' + (n + 1);
                 let b = this.getbottype(a);
@@ -202,8 +201,9 @@
             return corner;
         }
 
-        cputurn(bottype) {
-            if (this.n != this.game.player) return;
+        cputurn(force=false) {
+            if (this.n != this.game.player || (!this.bot&&!force )) return;
+            let bottype=this.bot?this.bot:3;
             let loop = this.blocks.length;
             let bestscor = 0;
             let bestx;

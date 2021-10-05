@@ -20,6 +20,7 @@ class Room {
         this.rule = new Gamerule(gamerules['Classic']);
         this.rulename = 'Classic';
 
+        this.spectatorcapacity = 4;
         this.capacity = this.rule.starts.length;
         whose.enterroom(this, this.password);
     }
@@ -31,7 +32,7 @@ class Room {
     }
     leave(who) {
         // console.log(who.name + ' left the room')
-        this.slots = this.slots.filter(n => n.hash != who.hash);
+        this.slots = this.slots.filter(n => n.hashstr != who.hashstr);
         return true;
     }
     host(who) {
@@ -43,8 +44,15 @@ class Room {
     memberindex(who) {
         return this.slots.indexOf(who);
     }
+    playerindex(who){
+        if(!who.playsAs) return null;
+        return who.playsAs.n;
+    }
     notfull(who = null) {
         if (this.member(who)) return true;
+        return this.slots.length < this.capacity+this.spectatorcapacity;
+    }
+    notenoughplayers() {
         return this.slots.length < this.capacity;
     }
     checkpassword(who, password) {
@@ -69,7 +77,7 @@ class Room {
     }
     startgame(who) {
         if (!this.host(who)) return false;
-        if (this.notfull()) return false;
+        if (this.notenoughplayers()) return false;
         this.game.newgame(this.timeless,this.slots.map(e => e.name),this.rule);
         for(let i=0;i<this.slots.length;i++){
             if(this.game.guys[i]) this.slots[i].playsAs=this.game.guys[i];
@@ -77,6 +85,9 @@ class Room {
         return true;
     }
     clone(who = null) {
+        if(this.game.guy()&&this.game.guy().bot){
+            this.game.guy().cputurn();
+        }
         let obj = {
             id: this.id,
             name: this.name,
@@ -89,8 +100,9 @@ class Room {
             gone: this.game.gone
         }
         if (who) {
-            obj['slotlist'] = this.slots.map(e => e.name);
+            obj['slotlist'] = this.slots.map(e => ({name:e.name,hashstr:e.hashstr, wantsToPlay:e.wantsToPlay}));
             obj['memberindex'] = this.memberindex(who);
+            obj['playerindex'] = this.playerindex(who);
             obj['game'] = this.game.clone();
         }
 

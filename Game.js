@@ -148,9 +148,9 @@
                 nextguy.checkavailable(false, -2);
                 if (this.guy().bot) {
                     //    this.paint();
-                    //this.guy().cputurn(this.guy().bot);
+                    //this.guy().cputurn();
                     setTimeout(function () {
-                        this.guy().cputurn(this.guy().bot);
+                        this.guy().cputurn();
                     }.bind(this), 100);
                 } else {
                     // maketime(this.id);

@@ -1,17 +1,15 @@
 
-const SHA3 = require('sha3');
 class Identity {
-    constructor(identity, name = '') {
-        let hash = new SHA3.SHA3(256);
+    constructor(hashstr, name = '') {
         this.room = null;
         this.name = 'Guest';
-        hash.update(identity);
 
-        this.hash = hash.digest('hex');
+        this.hashstr = hashstr;
         this.changename(name);
         this.lastseen = Date.now();
         this.message = 'Welcome to Tetrahecta!';
         this.playsAs = null;
+        this.wantsToPlay = true;
         // console.log(this.name + ' joined');
     }
     changename(name = '') {

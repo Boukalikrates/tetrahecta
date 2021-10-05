@@ -9,7 +9,7 @@
                 blkp = {
                     clearbonus: 0,
                     ubonus: 0,
-                    boardsize: 1,
+                    boardsize: 0,
                     starts: [],
                     data: {}
                 };

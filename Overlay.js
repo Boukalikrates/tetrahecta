@@ -80,9 +80,9 @@ class Overlay {
             if (current.rule.counts[i] != 0)
                 temp += "<th>" + i + "</th>";
         }
-        if (current.rule.clearbonus > 0)
+        if (current.rule.clearbonus != 0)
             temp += "<th>Clr</th>";
-        if (current.rule.ubonus > 0)
+        if (current.rule.ubonus != 0)
             temp += "<th>UB</th>";
 
         temp += "<th>Total</th></thead>";
@@ -102,10 +102,10 @@ class Overlay {
                 let isclearbonus = guy.blocks.length == 0;
                 let isubonus = isclearbonus ? (guy.last.ps == 1) : (guy.count()[1] == 0);
 
-                if (current.rule.clearbonus > 0)
+                if (current.rule.clearbonus != 0)
                     temp += "<td" + (isclearbonus ? colour : "") + ">" + (isclearbonus ? current.rule.clearbonus : 0) + "</td>";
 
-                if (current.rule.ubonus > 0)
+                if (current.rule.ubonus != 0)
                     temp += "<td" + (isubonus ? colour : "") + ">" + (isubonus ? current.rule.ubonus : 0) + "</td>";
 
                 temp += "<th" + colour + ">" + (pts0[pts0.length - 1]) + "</th></tr>";
@@ -117,7 +117,7 @@ class Overlay {
 
         let ptsmax = pts0.reduce(function (a, b) {
             return Math.max(a, b)
-        },0);
+        },-Infinity);
         let winner = "";
         let maxscore = 0;
         for (let i = 0; i < pts0.length; i++) {
@@ -181,45 +181,29 @@ class Overlay {
                 this.elem.find('.publicroom').prop('checked',d.public);
             }
 
-            this.elem.find('.publicroom, .roomname, .gamesaver, .formsaver').prop('disabled',memberindex!=0)
+            this.elem.find('.publicroom, .roomname, .gamesaver, .formsaver, .grchooser').prop('disabled',memberindex!=0)
             
             // console.log(d);
 
 
-            let plist = this.elem.find('.playerlist');
-            // if(plist.children('.you').length==0){
-            //     plist.append('<label class="you">Player <span class="te memberindex">0</span> (you)<span class="host"></span><input class="tin te "></label>')
-            // }
+            let plist = this.elem.find('.onlineplayerlist');
+            let splist = this.elem.find('.spectatorlist');
 
-            // let you=plist.children('.you');
-            // let youinput=you.find('input');
-            // // if(!youinput.hasClass('multiplayername')){
-            // //     youinput.val(d.slotlist[memberindex]).addClass('multiplayername');
-            // // }
-            // you.find('.memberindex').text(memberindex+1);
-            // you.find('.host').text(memberindex==0?' (host)':'');
+            plist.children().remove();
+            splist.children().remove();
 
-
-            plist.children('.notyou').remove();
-            // for (let i = memberindex-1; i >=0; i--) {
-            //     let name=d.slotlist[i];
-            //     if (typeof name == 'undefined') name='';
-            //     let host=i==0?' (host)':'';
-            //     plist.prepend('<label class="notyou">Player <span class="te">' + (i + 1) + '</span>'+host+'<input class="tin te" disabled value="'+name+'"></label>')
-            // }
-            // for (let i = memberindex+1; i < d.capacity; i++) {
-            //     let name=d.slotlist[i];
-            //     if (typeof name == 'undefined') name='';
-            //     let host=i==0?' (host)':'';
-            //     plist.append('<label class="notyou">Player <span class="te">' + (i + 1) + '</span>'+host+'<input class="tin te" disabled value="'+name+'"></label>')
-            // }
-            for (let i = 0; i < d.capacity; i++) {
-                let name=d.slotlist[i];
+            for (let i = 0; i < d.slotlist.length; i++) {
+                let player=d.slotlist[i]
+                let name=player.name;
                 if (typeof name == 'undefined') name='';
                 let host=i==0?' (host)':'';
                 let you=i==memberindex?' (you)':'';
-                let kick=memberindex==0?' (kick)':'';
-                plist.append('<label class="notyou">Player <span class="te">' + (i + 1) + '</span>'+host+you+kick+'<input class="tin te" disabled value="'+name+'"></label>')
+                let kick=(memberindex==0&&i!=0)?' <span class="kickbutton" data-name="'+name+'" data-hashstr="'+player.hashstr+'">(kick)</span>':'';
+                let str = '<li class="notyou"><span class="te">' + name + '</span>'+host+you+kick+'</li>';
+                if(plist.children().length>=d.capacity)
+                splist.append(str)
+                else
+                plist.append(str)
             }
             for (let i = 0; i < d.capacity; i++) {
                 plist.children().eq(i).find('.te').css('color', 'hsl( ' + (360 * i / d.capacity + 225) + ' ,100%,50%)');
