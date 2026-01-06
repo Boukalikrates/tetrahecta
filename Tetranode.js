@@ -1,5 +1,5 @@
 const http = require('http');
-const https = require('https');
+// const https = require('https');
 const url = require('url');
 const fs = require('fs');
 const qs = require('querystring');
@@ -85,17 +85,18 @@ function createroom(identity) {
 }
 
 function enterroom(identity, roomid = 0, password = '') {
+    message=identity.getmessage();
     roomid = +roomid;
     let room;
     if (roomid && roomid != NaN) room = rooms[roomid]
     else if (identity.room) room = identity.room;
-    else return JSON.stringify({});
-    if (!room) return JSON.stringify({ 'error': 'This room does not exist' });
-    if (!room.notfull(identity)) return JSON.stringify({ 'error': 'This room is full' });
-    if (!room.checkpassword(identity, password)) return JSON.stringify({ 'error': 'Incorrect password' });
+    else return JSON.stringify({'message': message});
+    if (!room) return JSON.stringify({ 'error': 'This room does not exist', 'message': message });
+    if (!room.notfull(identity)) return JSON.stringify({ 'error': 'This room is full', 'message': message });
+    if (!room.checkpassword(identity, password)) return JSON.stringify({ 'error': 'Incorrect password', 'message': message });
     let success = identity.enterroom(room, password);
-    if (success) return JSON.stringify({ 'data': room.clone(identity) })
-    else return JSON.stringify({ 'error': 'Could not join the room' });
+    if (success) return JSON.stringify({ 'data': room.clone(identity), 'message': message })
+    else return JSON.stringify({ 'error': 'Could not join the room', 'message': message });
 }
 
 function leaveroom(identity) {

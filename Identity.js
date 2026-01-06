@@ -7,7 +7,7 @@ class Identity {
         this.hashstr = hashstr;
         this.changename(name);
         this.lastseen = Date.now();
-        this.message = 'Welcome to Tetrahecta!';
+        this.message = '';
         this.playsAs = null;
         this.wantsToPlay = true;
         // console.log(this.name + ' joined');
@@ -40,6 +40,9 @@ class Identity {
         }
         this.room = room;
         return room.join(this, password);
+    }
+    setmessage(message){
+        this.message+='\n> '+message
     }
     getmessage() {
         if (this.message) {

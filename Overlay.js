@@ -171,7 +171,10 @@ class Overlay {
         if (data.error) {
             this.alert(data.error);
         }
-        else if(data.data){
+        if(data.message){
+            this.alert(data.message);
+        }
+        if(data.data){
             let d=data.data;
             let memberindex=d.memberindex;
 

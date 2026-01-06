@@ -224,7 +224,6 @@ class Controller {
         });
     }
     getroomscallback(data) {
-        if (data.message) console.log(message);
         this.overlay.refreshrooms(data);
         clearTimeout(this.getroomstimeout);
         this.getroomstimeout = setTimeout(this.getrooms.bind(this), 1000);
@@ -265,6 +264,7 @@ class Controller {
     }
 
     changeprops() {
+        if(this.server)
         $.ajax({
             type: "POST",
             url: '/changeprops',
@@ -331,6 +331,7 @@ class Controller {
                     this.overlay.tick(this.playerindex==data.data.game.player)
                 }
             } else {
+                this.current.newgame(false, [], new Gamerule());
                 window.location.hash = '';
             }
             this.overlay.enterroom(data);

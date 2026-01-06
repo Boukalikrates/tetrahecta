@@ -6344,7 +6344,7 @@
     "Test2": {
         "clearbonus": -2,
         "ubonus": -543228,
-        "boardsize": 0,
+        "boardsize": 4,
         "starts": [
             {
                 "x": 0,

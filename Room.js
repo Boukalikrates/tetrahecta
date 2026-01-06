@@ -62,6 +62,7 @@ class Room {
     kick(who, whom) {
         if (!this.host(who)) return false;
         if (!this.member(whom)) return false;
+        whom.setmessage('You were kicked from '+this.name);
         return whom.leaveroom();
     }
     changeprops(who, props) {

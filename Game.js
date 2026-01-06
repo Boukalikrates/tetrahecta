@@ -8,12 +8,6 @@
             this.layout = layout;
             this.overlay = overlay;
 
-            //        if (g) {
-            //            var gamob = (typeof (g) == "string") ? JSON.parse(g) : g;
-            //            this.unclone(gamob);
-            //        } else {
-            //            this.newgame(false, ["", "", "", "", ""], false, true)
-            //        }
             this.newgame(false, [], new Gamerule());
             return this;
         }
